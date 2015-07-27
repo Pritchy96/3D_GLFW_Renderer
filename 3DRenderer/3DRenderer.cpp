@@ -3,6 +3,7 @@
 #include "stdafx.h"	//Must be at top.
 #include <GL/glew.h> //Makes sure we're using latest GL.
 #include <GLFW/glfw3.h>
+#include "Logger.h"
 #include <iostream>
 #include <vector>
 
@@ -20,6 +21,9 @@ double scale = 0.01;
 //Window size
 int g_gl_width = 640;
 int g_gl_height = 480;
+
+//Prototypes
+void log_gl_params(Logger logger);
 
 
 static void error_callback(int error, const char* description)
@@ -67,15 +71,21 @@ void update_fps_counter(GLFWwindow* window) {
 
 int main(int argc, char* argv[]){
 	{
+
+		//Logging
+		Logger logger;
+
+		logger.log("Log Start:", true, true);
+
 		if (!glfwInit()){
-			cout << "ERROR: could not initiate GLFW" << endl;
+			logger.log("ERROR: could not initiate GLFW", false, true);
 			return 1;
 		}
 
 		GLFWwindow* window = glfwCreateWindow(640, 480, "Renderer", NULL, NULL);
 
 		if (!window) {
-			cout << "ERROR: could not open window using GLFW" << endl;
+			logger.log("ERROR: could not open window using GLFW", false, true);
 			glfwTerminate();
 			return 1;
 		}
@@ -91,11 +101,14 @@ int main(int argc, char* argv[]){
 		glewExperimental = GL_TRUE;
 		glewInit();
 
-		// get version info
-		const GLubyte* renderer = glGetString(GL_RENDERER); // get renderer string
-		const GLubyte* version = glGetString(GL_VERSION); // version as a string
-		cout << ("Renderer: %s\n", renderer) << endl;
-		cout << ("OpenGL version supported %s\n", version) << endl;
+		// get and log version info
+		string renderer = (const char*)glGetString(GL_RENDERER);
+		string version = (const char*)glGetString(GL_VERSION);
+		logger.log(("Renderer: %s", renderer), false, true);
+		logger.log(("OpenGL version supported %s", version), false, true);
+
+		//NOT WORKING
+		//log_gl_params(logger);
 
 		//Enable GL Depth tests.
 		glEnable(GL_DEPTH_TEST); // enable depth-testing
@@ -192,4 +205,57 @@ int main(int argc, char* argv[]){
 		glfwTerminate();
 		exit(EXIT_SUCCESS);
 	}
+}
+
+
+void log_gl_params(Logger logger) {
+	GLenum params[] = {
+		GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS,
+		GL_MAX_CUBE_MAP_TEXTURE_SIZE,
+		GL_MAX_DRAW_BUFFERS,
+		GL_MAX_FRAGMENT_UNIFORM_COMPONENTS,
+		GL_MAX_TEXTURE_IMAGE_UNITS,
+		GL_MAX_TEXTURE_SIZE,
+		GL_MAX_VARYING_FLOATS,
+		GL_MAX_VERTEX_ATTRIBS,
+		GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS,
+		GL_MAX_VERTEX_UNIFORM_COMPONENTS,
+		GL_MAX_VIEWPORT_DIMS,
+		GL_STEREO,
+	};
+	const char* names[] = {
+		"GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS",
+		"GL_MAX_CUBE_MAP_TEXTURE_SIZE",
+		"GL_MAX_DRAW_BUFFERS",
+		"GL_MAX_FRAGMENT_UNIFORM_COMPONENTS",
+		"GL_MAX_TEXTURE_IMAGE_UNITS",
+		"GL_MAX_TEXTURE_SIZE",
+		"GL_MAX_VARYING_FLOATS",
+		"GL_MAX_VERTEX_ATTRIBS",
+		"GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS",
+		"GL_MAX_VERTEX_UNIFORM_COMPONENTS",
+		"GL_MAX_VIEWPORT_DIMS",
+		"GL_STEREO",
+	};
+
+	logger.log(("GL Context Params:\n"), false, true);
+
+	char msg[256];
+	// integers - only works if the order is 0-10 integer return types
+	for (int i = 0; i < 10; i++) {
+		int v = 0;
+		glGetIntegerv(params[i], &v);
+		logger.log(("%s %i\n", names[i], (char*)v), false, true);
+	}
+	/*
+	// others
+	int v[2];
+	v[0] = v[1] = 0;
+	glGetIntegerv(params[10], v);
+	gl_log("%s %i %i\n", names[10], v[0], v[1]);
+	unsigned char s = 0;
+	glGetBooleanv(params[11], &s);
+	gl_log(m"%s %u\n", names[11], (unsigned int)s);
+	gl_log("-----------------------------\n");
+	*/
 }

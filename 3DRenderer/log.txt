@@ -1,0 +1,6 @@
+Time/Date of Log: Mon Jul 27 15:59:26 2015
+
+
+Log Start:
+AMD Radeon HD 7800 Series
+4.5.13397 Compatibility Profile Context 15.200.1046.0
