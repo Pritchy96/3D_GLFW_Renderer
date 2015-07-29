@@ -13,7 +13,7 @@ public:
 	Logger();
 	~Logger();
 
-	void log(string text, bool truncate, bool log_to_console);
-	void log_multiple(vector<string> text, bool truncate, bool log_to_console);
+	static void log(string text, bool truncate, bool log_to_console);
+	static void log_multiple(vector<string> text, bool truncate, bool log_to_console);
 };
 

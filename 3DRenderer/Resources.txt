@@ -1,0 +1,7 @@
+OpenGL
+	Introduction
+		http://antongerdelan.net/opengl/hellotriangle.html
+		http://www.opengl-tutorial.org/beginners-tutorials/tutorial-1-opening-a-window/
+	Matrices and Transformations (Translate, Rotate, Scale)
+		http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
+		Gerdelan, Anton. Anton's Opengl 4 Tutorials (Kindle). 2014. "Transformation" Section
