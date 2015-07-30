@@ -5,7 +5,7 @@ layout(location = 0) in vec3 vertexPosition_modelspace;
 //Input vertex colour, Location 1 of VBO as set in VBO init code.
 layout(location = 1) in vec3 vertex_colour;
 
-// Output data, interpolated for each fragment.
+// Output data to next stage of the gfx pipeline (the fragment shader).
 out vec3 fragment_colour;
 // Values that stay constant for the whole mesh.
 uniform mat4 MVP;

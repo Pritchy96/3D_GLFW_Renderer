@@ -9,6 +9,7 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include "LoadShader.h"
+#include "InputHandler.h"
 using namespace std;
 
 
@@ -21,8 +22,8 @@ double rotate_z = 0;
 double scale = 0.01;
 
 //Window size
-int g_gl_width = 640;
-int g_gl_height = 480;
+int g_gl_width = 1024;
+int g_gl_height = 768;
 
 //Prototypes
 void log_gl_params();
@@ -32,11 +33,6 @@ void log_gl_params();
 static void error_callback(int error, const char* description)
 {
 	fputs(description, stderr);	//Error logging stuff
-}
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 //Window size change callback.
 static void window_size_callback(GLFWwindow* window, int width, int height)
@@ -83,7 +79,7 @@ int main(int argc, char* argv[]){
 			return 1;
 		}
 
-		GLFWwindow* window = glfwCreateWindow(640, 480, "Renderer", NULL, NULL);
+		GLFWwindow* window = glfwCreateWindow(g_gl_width, g_gl_height, "Renderer", NULL, NULL);
 
 		if (!window) {
 			Logger::log("ERROR: could not open window using GLFW", false, true);
@@ -95,6 +91,8 @@ int main(int argc, char* argv[]){
 		glfwSetErrorCallback(error_callback);
 		glfwSetWindowSizeCallback(window, window_size_callback);
 
+		//Setup input handler callbacks.
+		InputHandler::setup(window);
 
 		glfwMakeContextCurrent(window);
 
@@ -111,9 +109,19 @@ int main(int argc, char* argv[]){
 		//NOT WORKING
 		//log_gl_params();
 
+		// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+		glm::mat4 Projection = glm::perspective(45.0f, ((float)g_gl_width) / ((float)g_gl_height), 0.1f, 100.0f);
+		// Camera matrix
+		glm::mat4 View = glm::lookAt(
+			glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
+			glm::vec3(0, 0, 0), // and looks at the origin
+			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+			);
+
 		//Enable GL Depth tests.
 		glEnable(GL_DEPTH_TEST); // enable depth-testing
 		glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
+
 
 		//Anti Aliasing
 		glfwWindowHint(GLFW_SAMPLES, 4);
@@ -213,46 +221,43 @@ int main(int argc, char* argv[]){
 		// Get a handle for our "MVP" uniform.
 		// Only at initialisation time.
 		GLuint MatrixID = glGetUniformLocation(shader_programme, "MVP");
+		
 
 
 		//Set colour that glClear sets screen to.
 		glClearColor(0.6f, 0.7f, 0.6f, 1.0f);
 		glViewport(0, 0, g_gl_width, g_gl_height);
-		//Wireframe
-		glPolygonMode(GL_FRONT, GL_LINE);
+
+		// Cull triangles which normal is not towards the camera
+		glEnable(GL_CULL_FACE);
 
 		//Set point size used for GL_POINTS rendering mode
 		glPointSize(2);
 
 		while (!glfwWindowShouldClose(window))
 		{
-			// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-			glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-			// Camera matrix
-			glm::mat4 View = glm::lookAt(
-				glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
-				glm::vec3(0, 0, 0), // and looks at the origin
-				glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-				);
+
 			// Model matrix : an identity matrix (model will be at the origin)
 			//Just giving mat4 one param will make it an identity matrix
 			//This means that the coords (of the model) will be zero, as they are the top four rows of the last column.
 
-			glm::mat4 Model = glm::mat4(1.0f);  // Changes for each model !
-			// Our ModelViewProjection : multiplication of our 3 matrices
-			glm::mat4 MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
+			// Compute the MVP matrix from keyboard and mouse input
+			InputHandler::update(window);
+			glm::mat4 ProjectionMatrix = InputHandler::getProjectionMatrix();
+			glm::mat4 ViewMatrix = InputHandler::getViewMatrix();
+			glm::mat4 ModelMatrix = glm::mat4(1.0);
+			glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 			// Send our transformation to the currently bound shader,
 			// in the "MVP" uniform
 			// For each model you render, since the MVP will be different (at least the M part)
 			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-
 			//FPS Counter
 			update_fps_counter(window);
 			// wipe the drawing surface clear
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glViewport(0, 0, g_gl_height, g_gl_height);
+			glViewport(0, 0, g_gl_width, g_gl_height);
 			glUseProgram(shader_programme);
 			glBindVertexArray(vao);
 			// draw all the array in the array (remember 3 entries in the array make up one point, XYZ, so divide size by 3), from the currently bound VAO with current in-use shader
