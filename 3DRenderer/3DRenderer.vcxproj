@@ -83,24 +83,36 @@
     <Text Include="Resources.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EasyBMP.h" />
+    <ClInclude Include="EasyBMP_BMP.h" />
+    <ClInclude Include="EasyBMP_DataStructures.h" />
+    <ClInclude Include="EasyBMP_VariousBMPutilities.h" />
+    <ClInclude Include="Fractal_Creator.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="Island_Utils.h" />
     <ClInclude Include="LoadShader.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DRenderer.cpp" />
+    <ClCompile Include="EasyBMP.cpp" />
+    <ClCompile Include="Fractal_Creator.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="Island_Utils.cpp" />
     <ClCompile Include="LoadShader.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="frag_shader.glsl" />
+    <None Include="red_frag_shader.glsl" />
     <None Include="vert_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

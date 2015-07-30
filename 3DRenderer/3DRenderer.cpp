@@ -10,6 +10,8 @@
 #include <gtc/matrix_transform.hpp>
 #include "LoadShader.h"
 #include "InputHandler.h"
+#include "Island_Utils.h"
+#include "Util.h"
 using namespace std;
 
 
@@ -126,55 +128,88 @@ int main(int argc, char* argv[]){
 		//Anti Aliasing
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
+#pragma region reading island array
+		vector<vector<int>> islandVector = Island_Utils::MakeIsland();
 
-		vector<float> points = {
-			-1.0f, -1.0f, -1.0f, // triangle 1 : begin
-			-1.0f, -1.0f, 1.0f,
-			-1.0f, 1.0f, 1.0f, // triangle 1 : end
-			1.0f, 1.0f, -1.0f, // triangle 2 : begin
-			-1.0f, -1.0f, -1.0f,
-			-1.0f, 1.0f, -1.0f, // triangle 2 : end
-			1.0f, -1.0f, 1.0f,
-			-1.0f, -1.0f, -1.0f,
-			1.0f, -1.0f, -1.0f,
-			1.0f, 1.0f, -1.0f,
-			1.0f, -1.0f, -1.0f,
-			-1.0f, -1.0f, -1.0f,
-			-1.0f, -1.0f, -1.0f,
-			-1.0f, 1.0f, 1.0f,
-			-1.0f, 1.0f, -1.0f,
-			1.0f, -1.0f, 1.0f,
-			-1.0f, -1.0f, 1.0f,
-			-1.0f, -1.0f, -1.0f,
-			-1.0f, 1.0f, 1.0f,
-			-1.0f, -1.0f, 1.0f,
-			1.0f, -1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, -1.0f, -1.0f,
-			1.0f, 1.0f, -1.0f,
-			1.0f, -1.0f, -1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, -1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, -1.0f,
-			-1.0f, 1.0f, -1.0f,
-			1.0f, 1.0f, 1.0f,
-			-1.0f, 1.0f, -1.0f,
-			-1.0f, 1.0f, 1.0f,
-			1.0f, 1.0f, 1.0f,
-			-1.0f, 1.0f, 1.0f,
-			1.0f, -1.0f, 1.0f
-		};
+		int arraySize = islandVector.size()*islandVector[0].size();
+		vector<float> position_array, colour_array;
+		position_array.resize(arraySize * 12);
+		colour_array.resize(arraySize * 12);
+
+		for (int y = 0; y < islandVector[0].size(); y++)
+		{
+			for (int x = 0; x < islandVector.size(); x++)
+			{
+				int arrayPosition = Util::To1DArray(x, y, islandVector.size()) * 12;
+
+				vector<int> colour = Island_Utils::GetBiomeColour()
+
+				//Top Left point
+				position_array[arrayPosition] = x*scale;
+				position_array[arrayPosition + 1] = y*scale;
+				position_array[arrayPosition + 2] = (islandVector[x][y])*(scale/10);
+
+				colour_array[arrayPosition] = 1;
+				colour_array[arrayPosition + 1] = 2;
+				colour_array[arrayPosition + 2] = 3;
+				
+				//Top Right Point.
+				position_array[arrayPosition + 3] = (x + 1.0f)*scale;
+				position_array[arrayPosition + 4] = y*scale;
+
+				if (x + 1 < islandVector.size())	
+				{
+					position_array[arrayPosition + 5] = (islandVector[x + 1][y])*(scale / 10);
+				}
+				else
+				{
+					//If the next value in the position_array doesn't exist, just make it the same height as the top left point.
+					position_array[arrayPosition + 5] = (islandVector[x][y])*(scale / 10);
+				}
+
+				//Bottom Right Point
+				position_array[arrayPosition + 6] = (x + 1.0f)*scale;
+				position_array[arrayPosition + 7] = (y + 1.0f)*scale;
+
+				if (y + 1 < islandVector[0].size() && x + 1 < islandVector.size())
+				{
+					position_array[arrayPosition + 8] = (islandVector[x + 1][y + 1])*(scale / 10);
+				}
+				else
+				{
+					position_array[arrayPosition + 8] = (islandVector[x][y])*(scale / 10);
+				}
+				
+				
+				//Bottom Left Point
+				position_array[arrayPosition + 9] = x*scale;
+				position_array[arrayPosition + 10] = (y + 1.0f)*scale;
+
+				if (y + 1 < islandVector[0].size())
+				{
+					position_array[arrayPosition + 11] = (islandVector[x][y + 1])*(scale / 10);
+				}
+				else
+				{
+					position_array[arrayPosition + 11] = (islandVector[x][y])*(scale / 10);
+				}	
+
+
+
+			}
+		}
+
+#pragma endregion
 
 #pragma region Setting up VAO
 
-		//Create a vertex buffer object (VBO), which basically moves the array[] to the GPU Memory
+		//Create a vertex buffer object (VBO), which basically moves the position_array[] to the GPU Memory
 		GLuint position_vbo = 0;
 		glGenBuffers(1, &position_vbo);
 		//Bind VBO, makes it the current buffer in OpenGL's state machine
 		glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
 		//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
-		glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), points.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
 
 		//Create a vertex buffer object (VBO), which basically moves the array[] to the GPU Memory
 		GLuint colour_vbo = 0;
@@ -183,7 +218,7 @@ int main(int argc, char* argv[]){
 		glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
 		//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
 		//NOTE: Here we are using the same data for position as well as colour! This is not normally the case!
-		glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), points.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, array.size() * sizeof(float), array.data(), GL_STATIC_DRAW);
 
 
 		//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
@@ -234,6 +269,8 @@ int main(int argc, char* argv[]){
 		//Set point size used for GL_POINTS rendering mode
 		glPointSize(2);
 
+
+
 		while (!glfwWindowShouldClose(window))
 		{
 
@@ -261,7 +298,7 @@ int main(int argc, char* argv[]){
 			glUseProgram(shader_programme);
 			glBindVertexArray(vao);
 			// draw all the array in the array (remember 3 entries in the array make up one point, XYZ, so divide size by 3), from the currently bound VAO with current in-use shader
-			glDrawArrays(GL_TRIANGLES, 0, points.size() / 3);
+			glDrawArrays(GL_QUADS, 0, position_array.size() / 3);
 			//Update other events like input handling 
 			glfwPollEvents();
 			//Put the stuff we've been drawing onto the display
