@@ -142,7 +142,7 @@ int main(int argc, char* argv[]){
 			{
 				int arrayPosition = Util::To1DArray(x, y, islandVector.size()) * 12;
 
-				vector<int> colour = Island_Utils::GetBiomeColour()
+				//vector<int> colour = Island_Utils::GetBiomeColour();
 
 				//Top Left point
 				position_array[arrayPosition] = x*scale;
@@ -218,7 +218,7 @@ int main(int argc, char* argv[]){
 		glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
 		//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
 		//NOTE: Here we are using the same data for position as well as colour! This is not normally the case!
-		glBufferData(GL_ARRAY_BUFFER, array.size() * sizeof(float), array.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
 
 
 		//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 

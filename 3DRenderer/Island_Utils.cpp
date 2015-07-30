@@ -16,7 +16,7 @@ using namespace std;
 // ----------------------------------------------------------C:\Windows\SysWOW64
 
 
-const int width = 600, height = 600;
+const int width = 200, height = 200;
 vector<vector<int>> islandFractal, islandShape, temperateFractal, heightFractal, rainFractal, islandColoured, gradientMap;
 
 
