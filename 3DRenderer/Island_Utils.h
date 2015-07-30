@@ -14,6 +14,8 @@ namespace Island_Utils
 		double bmp2Coeff = 0.5, int offset = 0, int maxValue = 255, int minValue = 0);
 	void SaveImage(vector<vector<int>>*  array, string imageName);
 	void SaveBiomeImage(vector<vector<int>>*  array, string imageName);
-	vector<vector<int>> MakeIsland();
+	void MakeIsland();
+	vector<vector<int>> GetIslandFractal();
+	vector<vector<int>> GetIslandColoured();
 	
 };

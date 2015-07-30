@@ -1,9 +1,15 @@
-Time/Date of Log: Thu Jul 30 18:31:56 2015
+Time/Date of Log: Thu Jul 30 22:51:38 2015
 
 
 Log Start:
-AMD Radeon HD 7800 Series
-4.5.13397 Compatibility Profile Context 15.200.1046.0
+Intel(R) HD Graphics
+2.1.0 - Build 8.15.10.2086
 vert_shader.glsl
+vert_shader.glsl
+ERROR: 0:2: '' :  Version number not supported by OGL driver
+ERROR: 0:2: '' : syntax error #version
+ERROR: 0:5: 'in' :  supported in GLSL 1.30 or later 
+ERROR: 0:8: 'out' :  supported in GLSL 1.30 or later 
+
 Linking program
 

@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 
 // Interpolated values inputted from the vertex shaders
 in vec3 fragment_colour;

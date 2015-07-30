@@ -24,7 +24,17 @@ vector<vector<int>> islandFractal, islandShape, temperateFractal, heightFractal,
 
 namespace Island_Utils
 {
-	vector<vector<int>> MakeIsland()
+	vector<vector<int>> GetIslandFractal()
+	{
+		return islandFractal;
+	}
+
+	vector<vector<int>> GetIslandColoured()
+	{
+		return islandColoured;
+	}
+
+	void MakeIsland()
 	{
 		Util::SeedGenerator(0);
 
@@ -58,9 +68,6 @@ namespace Island_Utils
 		islandColoured = Island_Utils::CalculateBiomes(&islandFractal, &islandShape, &heightFractal, &temperateFractal, &rainFractal);
 		
 		SaveBiomeImage(&islandColoured, "colour.bmp");
-		return islandFractal;
-
-
 	}
 
 

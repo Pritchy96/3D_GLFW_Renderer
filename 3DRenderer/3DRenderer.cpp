@@ -30,6 +30,7 @@ int g_gl_height = 768;
 //Prototypes
 void log_gl_params();
 
+vector<vector<int>> island_fractal, island_colour;
 
 
 static void error_callback(int error, const char* description)
@@ -129,73 +130,87 @@ int main(int argc, char* argv[]){
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
 #pragma region reading island array
-		vector<vector<int>> islandVector = Island_Utils::MakeIsland();
 
-		int arraySize = islandVector.size()*islandVector[0].size();
+		Island_Utils::MakeIsland();
+		island_fractal = Island_Utils::GetIslandFractal();
+		island_colour = Island_Utils::GetIslandColoured();
+
+		int arraySize = island_fractal.size()*island_fractal[0].size();
 		vector<float> position_array, colour_array;
 		position_array.resize(arraySize * 12);
 		colour_array.resize(arraySize * 12);
 
-		for (int y = 0; y < islandVector[0].size(); y++)
+		for (int y = 0; y < island_fractal[0].size(); y++)
 		{
-			for (int x = 0; x < islandVector.size(); x++)
+			for (int x = 0; x < island_fractal.size(); x++)
 			{
-				int arrayPosition = Util::To1DArray(x, y, islandVector.size()) * 12;
+				int arrayPosition = Util::To1DArray(x, y, island_fractal.size()) * 12;
 
-				//vector<int> colour = Island_Utils::GetBiomeColour();
+				vector<int> colour_int = (Island_Utils::GetBiomeColour(island_colour[x][y]));
+
+				//Convert to a float between 0 and 1
+				vector<float> colour_float = { ((float)colour_int[0])/255, ((float)colour_int[1])/255, ((float)colour_int[2])/255 };
 
 				//Top Left point
 				position_array[arrayPosition] = x*scale;
 				position_array[arrayPosition + 1] = y*scale;
-				position_array[arrayPosition + 2] = (islandVector[x][y])*(scale/10);
+				position_array[arrayPosition + 2] = (island_fractal[x][y])*(scale/10);
 
-				colour_array[arrayPosition] = 1;
-				colour_array[arrayPosition + 1] = 2;
-				colour_array[arrayPosition + 2] = 3;
+				colour_array[arrayPosition] = colour_float[0];
+				colour_array[arrayPosition + 1] = colour_float[1];
+				colour_array[arrayPosition + 2] = colour_float[2];
 				
 				//Top Right Point.
 				position_array[arrayPosition + 3] = (x + 1.0f)*scale;
 				position_array[arrayPosition + 4] = y*scale;
 
-				if (x + 1 < islandVector.size())	
+				if (x + 1 < island_fractal.size())	
 				{
-					position_array[arrayPosition + 5] = (islandVector[x + 1][y])*(scale / 10);
+					position_array[arrayPosition + 5] = (island_fractal[x + 1][y])*(scale / 10);
 				}
 				else
 				{
 					//If the next value in the position_array doesn't exist, just make it the same height as the top left point.
-					position_array[arrayPosition + 5] = (islandVector[x][y])*(scale / 10);
+					position_array[arrayPosition + 5] = (island_fractal[x][y])*(scale / 10);
 				}
+
+				colour_array[arrayPosition + 3] = colour_float[0];
+				colour_array[arrayPosition + 4] = colour_float[1];
+				colour_array[arrayPosition + 5] = colour_float[2];
 
 				//Bottom Right Point
 				position_array[arrayPosition + 6] = (x + 1.0f)*scale;
 				position_array[arrayPosition + 7] = (y + 1.0f)*scale;
 
-				if (y + 1 < islandVector[0].size() && x + 1 < islandVector.size())
+				if (y + 1 < island_fractal[0].size() && x + 1 < island_fractal.size())
 				{
-					position_array[arrayPosition + 8] = (islandVector[x + 1][y + 1])*(scale / 10);
+					position_array[arrayPosition + 8] = (island_fractal[x + 1][y + 1])*(scale / 10);
 				}
 				else
 				{
-					position_array[arrayPosition + 8] = (islandVector[x][y])*(scale / 10);
+					position_array[arrayPosition + 8] = (island_fractal[x][y])*(scale / 10);
 				}
-				
+
+				colour_array[arrayPosition + 6] = colour_float[0];
+				colour_array[arrayPosition + 7] = colour_float[1];
+				colour_array[arrayPosition + 8] = colour_float[2];
 				
 				//Bottom Left Point
 				position_array[arrayPosition + 9] = x*scale;
 				position_array[arrayPosition + 10] = (y + 1.0f)*scale;
 
-				if (y + 1 < islandVector[0].size())
+				if (y + 1 < island_fractal[0].size())
 				{
-					position_array[arrayPosition + 11] = (islandVector[x][y + 1])*(scale / 10);
+					position_array[arrayPosition + 11] = (island_fractal[x][y + 1])*(scale / 10);
 				}
 				else
 				{
-					position_array[arrayPosition + 11] = (islandVector[x][y])*(scale / 10);
+					position_array[arrayPosition + 11] = (island_fractal[x][y])*(scale / 10);
 				}	
 
-
-
+				colour_array[arrayPosition + 9] = colour_float[0];
+				colour_array[arrayPosition + 10] = colour_float[1];
+				colour_array[arrayPosition + 11] = colour_float[2];
 			}
 		}
 
@@ -218,7 +233,7 @@ int main(int argc, char* argv[]){
 		glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
 		//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
 		//NOTE: Here we are using the same data for position as well as colour! This is not normally the case!
-		glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, colour_array.size() * sizeof(float), colour_array.data(), GL_STATIC_DRAW);
 
 
 		//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 

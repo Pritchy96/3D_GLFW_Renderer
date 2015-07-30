@@ -1,4 +1,4 @@
-#version 400 core
+#version 330 core
 
 // Input vertex data, notice it's from "location 0" of the VBO
 layout(location = 0) in vec3 vertexPosition_modelspace;
