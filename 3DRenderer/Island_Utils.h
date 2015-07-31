@@ -1,7 +1,9 @@
 //#pragma once
 #include <vector>
 #include "EasyBMP.h"
+#include "Logger.h"
 using namespace std;
+
 
 namespace Island_Utils
 {

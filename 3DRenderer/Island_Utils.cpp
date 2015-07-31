@@ -9,14 +9,14 @@
 #include "Util.h"
 #include "EasyBMP.h"
 #include "Fractal_Creator.h"
-#
+#include "Logger.h"
 using namespace std;
 // ----------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------C:\Windows\SysWOW64
 
 
-const int width = 200, height = 200;
+const int width = 600, height = 600;
 vector<vector<int>> islandFractal, islandShape, temperateFractal, heightFractal, rainFractal, islandColoured, gradientMap;
 
 
@@ -26,7 +26,7 @@ namespace Island_Utils
 {
 	vector<vector<int>> GetIslandFractal()
 	{
-		return islandFractal;
+		return heightFractal;
 	}
 
 	vector<vector<int>> GetIslandColoured()
@@ -40,34 +40,35 @@ namespace Island_Utils
 
 		Fractal_Creator maker = Fractal_Creator();
 
-		cout << "Generating Island Fractal" << endl;
+		Logger::log("Generating Island Fractal", false, true);
 		islandFractal = maker.MakeFractal(width, height, 12);
 		
-		cout << "Generating Island Shape" << endl;
+		Logger::log("Generating Island Shape", false, true);
 		islandShape = Island_Utils::ShapeIsland(&islandFractal);
 
-		cout << "Generating Temperate Fractal" << endl;
+		Logger::log("Generating Temperate Fractal", false, true);
 		temperateFractal = maker.MakeFractal(width, height, 4, 100, 0);
 
-		cout << "Generating Rain Fractal" << endl;
+		Logger::log("Generating Rain Fractal", false, true);
 		rainFractal = maker.MakeFractal(width, height, 4, 100, 0);
 
-		cout << "Generating Gradient Map" << endl;
+		Logger::log("Generating Gradient Map", false, true);
 		gradientMap = Island_Utils::MakeCircularGradient(width, height, 255, 0);
 
-		cout << "Generating Height Fractal" << endl;
+		Logger::log("Generating Height Fractal", false, true);
 		heightFractal = maker.MakeFractal(width, height, 12);
 
-		cout << "Interpolating Height Fractal with Gradient Map" << endl;
-		heightFractal = Island_Utils::InterpolateBitmaps(&heightFractal, &gradientMap, 0.3, 1);
+		Logger::log("Interpolating Height Fractal with Gradient Map", false, true);
+		heightFractal = Island_Utils::InterpolateBitmaps(&heightFractal, &gradientMap, 0.5, 0.5);
 
-		cout << "Interpolating TemperateFractal with Gradient Map" << endl;
+		Logger::log("Interpolating TemperateFractal with Gradient Map", false, true);
 		temperateFractal = Island_Utils::InterpolateBitmaps(&temperateFractal, &gradientMap, 1, 1, 0);
 
-		cout << "Calculating Biomes" << endl;
+		Logger::log("Calculating Biomes", false, true);
 		islandColoured = Island_Utils::CalculateBiomes(&islandFractal, &islandShape, &heightFractal, &temperateFractal, &rainFractal);
 		
-		SaveBiomeImage(&islandColoured, "colour.bmp");
+		Logger::log("Saving Biome Image", false, true);
+		//SaveBiomeImage(&islandColoured, "colour.bmp");
 	}
 
 
@@ -99,31 +100,34 @@ namespace Island_Utils
 				double gradientValue = ((distance / maxDistance));  //Gradient used to get an island shape
 				int gradientStrength = 255; //how prevalent the Circular gradient is in the final value. Reduce to make reduce the centering effect. Not reccomended to change below 255.
 				int heightStrength = 100;   //How prevalant the heightmap is in the final value. Reduce for smaller, less chaotic islands.
-				int offset = -90;    //Offset used to make boost the value to make bigger islands. Reduce for smaller islands.
+				int offset = 90;    //Offset used to make boost the value to make bigger islands. Reduce for smaller islands.
 
-				double finalValue = (double)abs((heightStrength * heightValue) + (gradientValue * gradientStrength) + offset); //Construct the final value for the island.
+				//TODO: Why does only Unsigned char/byte work???
+				unsigned char finalValue = (char)((heightStrength * heightValue) - (gradientValue * gradientStrength) + offset); //Construct the final value for the island.
+				
+			
 #pragma endregion
 
 #pragma region Removing Fractal (blue for land, black for sea).
 				//Keep value between 0 and 255
-				if (finalValue > 109 || distance > (maxDistance*3/4))    //If we're high enough to be considered ocean or close to the edge.
+				if (finalValue > 109 || distance > maxDistance - 50)    //If we're high enough to be considered ocean or close to the edge.
 				{
 					//If we're close to the center and it's going to be water, instead make it land.  
-					//if (distance < 170)
-					//{
-					//	finalValue = 0;
-						//finalValue = (byte)Math.Min(255, (finalValue + (int)(((float)finalValue / 255) * rand.Next(-5, 5))));
-					//}
-					//else //Otherwise make it sea.
-					//{
+					if (distance < 170)
+					{
 						finalValue = 255;
-					//}
+						//finalValue = (byte)Math.Min(255, (finalValue + (int)(((float)finalValue / 255) * rand.Next(-5, 5))));
+					}
+					else //Otherwise make it sea.
+					{
+						finalValue = 0;
+					}
 				}
 				
 				else
 				{
-					finalValue = 0;
-					//finalValue = (byte)Math.Min(255, (finalValue + (int)(((float)finalValue / 255) * rand.Next(170-5, 5))));
+					finalValue = 255;
+					//finalValue = (byte)(Math.Min(255, (finalValue + (int)(((float)finalValue / 255) * rand.Next(170-5, 5))));
 				}
 #pragma endregion
 
@@ -148,7 +152,7 @@ namespace Island_Utils
 			for (int y = 0; y < height; y++)
 			{
 
-				if ((*islandShape)[x][y] == 0)  //Land
+				if ((*islandShape)[x][y] == 255)  //Land
 				{
 					if ((*tempFractal)[x][y] < 20)
 					{
@@ -435,7 +439,7 @@ namespace Island_Utils
 				double distX = abs(x - centerX), distY = abs(y - centerY);    //Distance fron center in x and y.
 				double distance = sqrt(pow(distX, 2) + pow(distY, 2));   //Distance from center.
 
-				map[x][y] = (int)((distance / maxDistance) * 255);
+				map[x][y] = (int)255 - ((distance / maxDistance) * 255);
 			}
 		}
 		return map;

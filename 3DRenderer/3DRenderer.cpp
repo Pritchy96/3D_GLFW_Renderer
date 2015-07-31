@@ -154,7 +154,7 @@ int main(int argc, char* argv[]){
 				//Top Left point
 				position_array[arrayPosition] = x*scale;
 				position_array[arrayPosition + 1] = y*scale;
-				position_array[arrayPosition + 2] = (island_fractal[x][y])*(scale/10);
+				position_array[arrayPosition + 2] = (island_fractal[x][y])*(scale/2);
 
 				colour_array[arrayPosition] = colour_float[0];
 				colour_array[arrayPosition + 1] = colour_float[1];
@@ -166,12 +166,12 @@ int main(int argc, char* argv[]){
 
 				if (x + 1 < island_fractal.size())	
 				{
-					position_array[arrayPosition + 5] = (island_fractal[x + 1][y])*(scale / 10);
+					position_array[arrayPosition + 5] = (island_fractal[x + 1][y])*(scale / 2);
 				}
 				else
 				{
 					//If the next value in the position_array doesn't exist, just make it the same height as the top left point.
-					position_array[arrayPosition + 5] = (island_fractal[x][y])*(scale / 10);
+					position_array[arrayPosition + 5] = (island_fractal[x][y])*(scale / 2);
 				}
 
 				colour_array[arrayPosition + 3] = colour_float[0];
@@ -184,11 +184,11 @@ int main(int argc, char* argv[]){
 
 				if (y + 1 < island_fractal[0].size() && x + 1 < island_fractal.size())
 				{
-					position_array[arrayPosition + 8] = (island_fractal[x + 1][y + 1])*(scale / 10);
+					position_array[arrayPosition + 8] = (island_fractal[x + 1][y + 1])*(scale / 2);
 				}
 				else
 				{
-					position_array[arrayPosition + 8] = (island_fractal[x][y])*(scale / 10);
+					position_array[arrayPosition + 8] = (island_fractal[x][y])*(scale / 2);
 				}
 
 				colour_array[arrayPosition + 6] = colour_float[0];
@@ -201,11 +201,11 @@ int main(int argc, char* argv[]){
 
 				if (y + 1 < island_fractal[0].size())
 				{
-					position_array[arrayPosition + 11] = (island_fractal[x][y + 1])*(scale / 10);
+					position_array[arrayPosition + 11] = (island_fractal[x][y + 1])*(scale / 2);
 				}
 				else
 				{
-					position_array[arrayPosition + 11] = (island_fractal[x][y])*(scale / 10);
+					position_array[arrayPosition + 11] = (island_fractal[x][y])*(scale / 2);
 				}	
 
 				colour_array[arrayPosition + 9] = colour_float[0];
