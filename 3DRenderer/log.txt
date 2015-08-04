@@ -1,4 +1,4 @@
-Time/Date of Log: Tue Aug 04 03:41:12 2015
+Time/Date of Log: Tue Aug 04 23:03:20 2015
 
 
 Log Start:
@@ -11,3 +11,7 @@ Generating Island Shape
 Generating Rain Fractal
 Interpolating Rain Fractal with Gradient Map to make Moisture Map
 Calculating Biomes
+Saving Biome Image
+vert_shader.glsl
+Linking program
+

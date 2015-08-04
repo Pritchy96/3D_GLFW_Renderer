@@ -16,7 +16,7 @@ using namespace std;
 // ----------------------------------------------------------C:\Windows\SysWOW64
 
 
-const int width = 600, height = 600;
+const int width = 600, height = 600, waterLevel = 300;
 vector<vector<int>> islandFractal, islandShape, elevationMap, moistureMap, islandColoured, gradientMap;
 int maxHeight = 0;
 
@@ -48,6 +48,22 @@ namespace Island_Utils
 		return maxVal;
 	}
 
+	int GetMinValue(vector<vector<int>> *array)
+	{
+		int minVal = 9999;
+		for (int x = 0; x < width; x++)
+		{
+			for (int y = 0; y < height; y++)
+			{
+				if ((*array)[x][y] < minVal)
+					minVal = (*array)[x][y];
+			}
+		}
+		return minVal;
+	}
+
+	
+
 	void MakeIsland()
 	{
 		Util::SeedGenerator(0);
@@ -67,15 +83,16 @@ namespace Island_Utils
 
 
 		Logger::log("Generating Rain Fractal", false, true);
-		moistureMap = maker.MakeFractal(width, height, 4, 100, 0);
+		moistureMap = maker.MakeFractal(width, height, 8, 255, 0);
 		Logger::log("Interpolating Rain Fractal with Gradient Map to make Moisture Map", false, true);
-		moistureMap = InterpolateBitmaps(&elevationMap, &gradientMap, 1.0f, 1.3f, 0, 10000);
+		//moistureMap = InterpolateBitmaps(&elevationMap, &gradientMap, 1.0f, 1.5f, 0, 10000);
 
 		Logger::log("Calculating Biomes", false, true);
-		islandColoured = Island_Utils::CalculateBiomes(&islandShape, &elevationMap, &moistureMap);
+		islandColoured = Island_Utils::CalculateBiomes(&elevationMap, &moistureMap);
 
 		Logger::log("Saving Biome Image", false, true);
-		//SaveBiomeImage(&islandColoured, "colour.bmp");
+		SaveBiomeImage(&islandColoured, "colour.bmp");
+		SaveImage(&moistureMap, "moisture.bmp");
 	}
 
 	vector<vector<int>> ShapeIsland(vector<vector<int>> *elevationMap)
@@ -113,12 +130,12 @@ namespace Island_Utils
 
 
 
-	vector<vector<int>> CalculateBiomes(vector<vector<int>> *islandShape, vector<vector<int>> *elevationMap, vector<vector<int>> *moistureMap)
+	vector<vector<int>> CalculateBiomes(vector<vector<int>> *elevationMap, vector<vector<int>> *moistureMap)
 	{
-		int width = (*islandShape).size(), height = (*islandShape)[0].size();
+		int width = (*elevationMap).size(), height = (*elevationMap)[0].size();
 		//Whittaker diagram has four rows for Elevation, 6 for Moisture. This is converting the 0-x to 1-6 and 1-4.
-		float maxHeight = (float)GetMaxValue(elevationMap), maxMoisture = (float)GetMaxValue(moistureMap);
-		float heightZone = maxHeight / 4, moistureZone = maxMoisture / 6;
+		float maxHeight = (float)GetMaxValue(elevationMap), maxMoisture = (float)GetMaxValue(moistureMap), minMoisture = (float)GetMinValue(moistureMap);
+		float heightZone = maxHeight / 4, moistureZone = (maxMoisture-minMoisture) / 6;
 
 		vector<vector<int>>  colouredIsland = vector<vector<int>>();
 		//Resizing array and setting all values to 0.
@@ -128,14 +145,79 @@ namespace Island_Utils
 		{
 			for (int y = 0; y < height; y++)
 			{
-
-				if ((*islandShape)[x][y] == 255)  //Land
+				int moistureVal = maxMoisture - ((*moistureMap)[x][y] - minMoisture);
+				if ((*elevationMap)[x][y] > waterLevel)  //Land
 				{
 					if ((*elevationMap)[x][y] <= 1 * heightZone)
 					{
-						if ((*moistureMap)[x][y] <= 1 * moistureZone)
+						if (moistureVal <= 1 * moistureZone)
 						{
-
+							colouredIsland[x][y] = 0;
+						}
+						else if (moistureVal <= 2 * moistureZone)
+						{
+							colouredIsland[x][y] = 1;
+						}
+						else if (moistureVal <= 4 * moistureZone)
+						{
+							colouredIsland[x][y] = 2;
+						}
+						else //if (moistureVal<= 6 * moistureZone)
+						{
+							colouredIsland[x][y] = 3;
+						}
+					}
+					else if ((*elevationMap)[x][y] <= 2 * heightZone)
+					{
+						if (moistureVal<= 1 * moistureZone)
+						{
+							colouredIsland[x][y] = 4;
+						}
+						else if (moistureVal<= 3 * moistureZone)
+						{
+							colouredIsland[x][y] = 1;
+						}
+						else if (moistureVal<= 5 * moistureZone)
+						{
+							colouredIsland[x][y] = 5;
+						}
+						else //if (moistureVal<= 6 * moistureZone)
+						{
+							colouredIsland[x][y] = 6;
+						}
+					}
+					else if ((*elevationMap)[x][y] <= 3 * heightZone)
+					{
+						if (moistureVal<= 2 * moistureZone)
+						{
+							colouredIsland[x][y] = 4;
+						}
+						else if (moistureVal<= 4 * moistureZone)
+						{
+							colouredIsland[x][y] = 7;
+						}
+						else //if (moistureVal<= 6 * moistureZone)
+						{
+							colouredIsland[x][y] = 8;
+						}
+					}
+					else //if ((*elevationMap)[x][y] <= 4 * heightZone)   //Snow and mountains
+					{
+						if (moistureVal<= 1 * moistureZone)
+						{
+							colouredIsland[x][y] = 9;
+						}
+						else if (moistureVal<= 2 * moistureZone)
+						{
+							colouredIsland[x][y] = 10;
+						}
+						else if (moistureVal<= 3 * moistureZone)
+						{
+							colouredIsland[x][y] = 11;
+						}
+						else //if (moistureVal<= 6 * moistureZone)
+						{
+							colouredIsland[x][y] = 12;
 						}
 					}
 				}
@@ -183,106 +265,106 @@ namespace Island_Utils
 		case 0:
 		{
 			//SubTropical Desert
-			colour[0] = 250;
-			colour[1] = 148;
-			colour[2] = 24;
+			colour[0] = 217;
+			colour[1] = 190;
+			colour[2] = 141;
 			break;
 		}
 		case 1:
 		{
 			//Grassland
-			colour[0] = 250;
-			colour[1] = 219;
-			colour[2] = 7;
+			colour[0] = 134;
+			colour[1] = 170;
+			colour[2] = 76;
 			break;
 		}
 		case 2:
 		{
 			//Tropical Seasonal Forest/Savanna
-			colour[0] = 250;
-			colour[1] = 219;
-			colour[2] = 7;
+			colour[0] = 75;
+			colour[1] = 101;
+			colour[2] = 101;
 			break;
 		}
 		case 3:
 		{
 			//Tropical Rain Forest
-			colour[0] = 155;
-			colour[1] = 224;
-			colour[2] = 35;
+			colour[0] = 44;
+			colour[1] = 114;
+			colour[2] = 73;
 
 			break;
 		}
 		case 4:
 		{
 			//Temperate Desert
-			colour[0] = 46;
-			colour[1] = 177;
-			colour[2] = 83;
+			colour[0] = 206;
+			colour[1] = 214;
+			colour[2] = 147;
 			break;
 		}
 		case 5:
 		{
 			//Temperate Deciduous Forest
-			colour[0] = 7;
-			colour[1] = 249;
-			colour[2] = 162;
+			colour[0] = 98;
+			colour[1] = 145;
+			colour[2] = 73;
 			break;
 		}
 		case 6:
 		{
 			//Temperate Rain Forest
-			colour[0] = 76;
-			colour[1] = 102;
-			colour[2] = 0;
+			colour[0] = 62;
+			colour[1] = 134;
+			colour[2] = 71;
 			break;
 		}
 		case 7:
 		{
 			//Shrubland
-			colour[0] = 5;
-			colour[1] = 102;
-			colour[2] = 33;
+			colour[0] = 134;
+			colour[1] = 152;
+			colour[2] = 114;
 			break;
 		}
 		case 8:
 		{
 			//Taiga
-			colour[0] = 85;
-			colour[1] = 235;
-			colour[2] = 249;
+			colour[0] = 152;
+			colour[1] = 170;
+			colour[2] = 114;
 			break;
 		}
 		case 9:
 		{
 			//Scorched
-			colour[0] = 85;
-			colour[1] = 235;
-			colour[2] = 249;
+			colour[0] = 38;
+			colour[1] = 38;
+			colour[2] = 38;
 			break;
 		}
 		case 10:
 		{
 			//Bare
-			colour[0] = 85;
-			colour[1] = 235;
-			colour[2] = 249;
+			colour[0] = 114;
+			colour[1] = 114;
+			colour[2] = 114;
 			break;
 		}
 		case 11:
 		{
 			//Tundra
-			colour[0] = 85;
-			colour[1] = 235;
-			colour[2] = 249;
+			colour[0] = 190;
+			colour[1] = 190;
+			colour[2] = 114;
 			break;
 		}
 		case 12:
 		{
 			//Snow
-			colour[0] = 85;
-			colour[1] = 235;
-			colour[2] = 249;
+			colour[0] = 250;
+			colour[1] = 250;
+			colour[2] = 250;
 			break;
 		}
 
@@ -349,7 +431,7 @@ namespace Island_Utils
 	void SaveImage(vector<vector<int>>*  array, string imageName)
 	{
 		BMP image;
-		int width = (*array).size(), height = (*array)[0].size();
+		int width = (*array).size(), height = (*array)[0].size(), maxVal = GetMaxValue(array);
 		image.SetSize(width, height);
 		image.SetBitDepth(32);
 
@@ -357,10 +439,22 @@ namespace Island_Utils
 		{
 			for (int y = 0; y < height; y++)
 			{
-				//vector<int> colour = Island_Utils::GetBiomeColour((*array)[x][y]);
-				image(x, y)->Red = (*array)[x][y];
-				image(x, y)->Green = (*array)[x][y];
-				image(x, y)->Blue = (*array)[x][y];
+				if ((*array)[x][y] > 255)
+				{
+					int val = (int)((((double)(*array)[x][y]) / (double)maxVal) * 255);
+					//vector<int> colour = Island_Utils::GetBiomeColour((*array)[x][y]);
+					image(x, y)->Red = val;
+					image(x, y)->Green = val;
+					image(x, y)->Blue = val;
+
+				}
+				else
+				{
+					//vector<int> colour = Island_Utils::GetBiomeColour((*array)[x][y]);
+					image(x, y)->Red = (*array)[x][y];
+					image(x, y)->Green = (*array)[x][y];
+					image(x, y)->Blue = (*array)[x][y];
+				}
 			}
 		}
 
