@@ -1,19 +1,13 @@
-Time/Date of Log: Fri Jul 31 04:52:58 2015
+Time/Date of Log: Tue Aug 04 03:41:12 2015
 
 
 Log Start:
 AMD Radeon HD 7800 Series
 4.5.13397 Compatibility Profile Context 15.200.1046.0
-Generating Island Fractal
-Generating Island Shape
-Generating Temperate Fractal
-Generating Rain Fractal
 Generating Gradient Map
 Generating Height Fractal
-Interpolating Height Fractal with Gradient Map
-Interpolating TemperateFractal with Gradient Map
+Interpolating Height Fractal with Gradient Map to make Elevation Map
+Generating Island Shape
+Generating Rain Fractal
+Interpolating Rain Fractal with Gradient Map to make Moisture Map
 Calculating Biomes
-Saving Biome Image
-vert_shader.glsl
-Linking program
-

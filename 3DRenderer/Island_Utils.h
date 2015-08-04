@@ -7,9 +7,8 @@ using namespace std;
 
 namespace Island_Utils
 {
-	vector<vector<int>> ShapeIsland(vector<vector<int>> *fractal);
-	vector<vector<int>> CalculateBiomes(vector<vector<int>> *islandFractal, vector<vector<int>> *islandShape, 
-		vector<vector<int>> *heightFractal, vector<vector<int>> *tempFractal, vector<vector<int>> *rainFractal);
+	vector<vector<int>> ShapeIsland(vector<vector<int>> *elevationMap);
+	vector<vector<int>> CalculateBiomes(vector<vector<int>> *islandShape, vector<vector<int>> *elevationMap, vector<vector<int>> *moistureMap);
 	vector<int> GetBiomeColour(int biome);
 	vector<vector<int>> MakeCircularGradient(int width, int height, int maxValue = 255, int minValue = 0);
 	vector<vector<int>> InterpolateBitmaps(vector<vector<int>> *bmp1, vector<vector<int>> *bmp2, double bmp1Coeff = 0.5,
@@ -19,5 +18,5 @@ namespace Island_Utils
 	void MakeIsland();
 	vector<vector<int>> GetIslandFractal();
 	vector<vector<int>> GetIslandColoured();
-	
+	int GetMaxValue(vector<vector<int>> *array);
 };
