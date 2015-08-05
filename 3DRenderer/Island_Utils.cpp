@@ -78,13 +78,11 @@ namespace Island_Utils
 		Logger::log("Interpolating Height Fractal with Gradient Map to make Elevation Map", false, true);
 		elevationMap = InterpolateBitmaps(&elevationMap, &gradientMap, 1.0f, 1.3f, 0, 10000);
 
-		Logger::log("Generating Island Shape", false, true);
-		islandShape = Island_Utils::ShapeIsland(&elevationMap);
+		elevationMap = FlattenWater(&elevationMap);
 
-
-		Logger::log("Generating Rain Fractal", false, true);
+		Logger::log("Generating Moisture Fractal", false, true);
 		moistureMap = maker.MakeFractal(width, height, 8, 255, 0);
-		Logger::log("Interpolating Rain Fractal with Gradient Map to make Moisture Map", false, true);
+		//Logger::log("Interpolating Rain Fractal with Gradient Map to make Moisture Map", false, true);
 		//moistureMap = InterpolateBitmaps(&elevationMap, &gradientMap, 1.0f, 1.5f, 0, 10000);
 
 		Logger::log("Calculating Biomes", false, true);
@@ -95,37 +93,24 @@ namespace Island_Utils
 		SaveImage(&moistureMap, "moisture.bmp");
 	}
 
-	vector<vector<int>> ShapeIsland(vector<vector<int>> *elevationMap)
+	vector<vector<int>> FlattenWater(vector<vector<int>> *elevationMap)
 	{
-		vector<vector<int>>  shape = vector<vector<int>>();
-		//Resizing array and setting all values to 0.
-		shape.resize(width, vector<int>(height, 0));
 
 		for (int x = 0; x < width; x++)
 		{
 			for (int y = 0; y < height; y++)
 			{
-				int finalValue = 0;
-
 				//If map value is low enough to be considered water...
 				if ((*elevationMap)[x][y] < 300)
 				{
 					//Make the elevation a flat level
 					(*elevationMap)[x][y] = 300;
-					//Make it water
-					finalValue = 0;
 				}
-
-				else    //Otherwise, make it land.
-				{
-					finalValue = 255;
-				}
-
-				shape[x][y] = finalValue;
+				
 			}
 		}
 
-		return shape;
+		return *elevationMap;
 	}
 
 

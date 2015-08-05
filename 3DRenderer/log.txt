@@ -1,4 +1,4 @@
-Time/Date of Log: Tue Aug 04 23:03:20 2015
+Time/Date of Log: Wed Aug 05 03:52:38 2015
 
 
 Log Start:
@@ -7,9 +7,7 @@ AMD Radeon HD 7800 Series
 Generating Gradient Map
 Generating Height Fractal
 Interpolating Height Fractal with Gradient Map to make Elevation Map
-Generating Island Shape
-Generating Rain Fractal
-Interpolating Rain Fractal with Gradient Map to make Moisture Map
+Generating Moisture Fractal
 Calculating Biomes
 Saving Biome Image
 vert_shader.glsl
