@@ -81,6 +81,7 @@
   <ItemGroup>
     <Text Include="ReadMe.txt" />
     <Text Include="Resources.txt" />
+    <Text Include="ToDo.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EasyBMP.h" />
