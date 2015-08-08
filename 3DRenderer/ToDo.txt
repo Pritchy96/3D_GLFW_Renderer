@@ -1,4 +1,15 @@
-Convert Colours to floats
-Understand Controls
 Convert Controls to use Quaternions
 Trial Textures
+Automate Camera starting at map center - based on map size.
+Move Camera position movement to callback.
+
+
+DONE
+
+08/08/15
+Replaced Tutorial Controls with Click and Drag Controls
+Added Camera Reset (Rotation & Position) on Space
+Set Scale to 1 instead of 0.01
+Camera now starts at center of map
+Converted Colours to floats
+Crappy zoom added using scroll wheel to modify FOV

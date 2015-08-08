@@ -21,7 +21,7 @@ using namespace std;
 double rotate_y = 0;
 double rotate_x = 0;
 double rotate_z = 0;
-double scale = 0.01;
+double scale = 1;
 
 //Window size
 int g_gl_width = 1024;
@@ -112,15 +112,6 @@ int main(int argc, char* argv[]){
 		//NOT WORKING
 		//log_gl_params();
 
-		// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-		glm::mat4 Projection = glm::perspective(45.0f, ((float)g_gl_width) / ((float)g_gl_height), 0.1f, 100.0f);
-		// Camera matrix
-		glm::mat4 View = glm::lookAt(
-			glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
-			glm::vec3(0, 0, 0), // and looks at the origin
-			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-			);
-
 		//Enable GL Depth tests.
 		glEnable(GL_DEPTH_TEST); // enable depth-testing
 		glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
@@ -146,19 +137,17 @@ int main(int argc, char* argv[]){
 			{
 				int arrayPosition = Util::To1DArray(x, y, island_fractal.size()) * 12;
 
-				vector<int> colour_int = (Island_Utils::GetBiomeColour(island_colour[x][y]));
+				vector<float> colour = (Island_Utils::GetBiomeColour(island_colour[x][y]));
 
-				//Convert to a float between 0 and 1
-				vector<float> colour_float = { ((float)colour_int[0])/255, ((float)colour_int[1])/255, ((float)colour_int[2])/255 };
 
 				//Top Left point
 				position_array[arrayPosition] = x*scale;
 				position_array[arrayPosition + 1] = y*scale;
 				position_array[arrayPosition + 2] = (island_fractal[x][y])*(scale/2);
 
-				colour_array[arrayPosition] = colour_float[0];
-				colour_array[arrayPosition + 1] = colour_float[1];
-				colour_array[arrayPosition + 2] = colour_float[2];
+				colour_array[arrayPosition] = colour[0];
+				colour_array[arrayPosition + 1] = colour[1];
+				colour_array[arrayPosition + 2] = colour[2];
 				
 				//Top Right Point.
 				position_array[arrayPosition + 3] = (x + 1.0f)*scale;
@@ -174,9 +163,9 @@ int main(int argc, char* argv[]){
 					position_array[arrayPosition + 5] = (island_fractal[x][y])*(scale / 2);
 				}
 
-				colour_array[arrayPosition + 3] = colour_float[0];
-				colour_array[arrayPosition + 4] = colour_float[1];
-				colour_array[arrayPosition + 5] = colour_float[2];
+				colour_array[arrayPosition + 3] = colour[0];
+				colour_array[arrayPosition + 4] = colour[1];
+				colour_array[arrayPosition + 5] = colour[2];
 
 				//Bottom Right Point
 				position_array[arrayPosition + 6] = (x + 1.0f)*scale;
@@ -191,9 +180,9 @@ int main(int argc, char* argv[]){
 					position_array[arrayPosition + 8] = (island_fractal[x][y])*(scale / 2);
 				}
 
-				colour_array[arrayPosition + 6] = colour_float[0];
-				colour_array[arrayPosition + 7] = colour_float[1];
-				colour_array[arrayPosition + 8] = colour_float[2];
+				colour_array[arrayPosition + 6] = colour[0];
+				colour_array[arrayPosition + 7] = colour[1];
+				colour_array[arrayPosition + 8] = colour[2];
 				
 				//Bottom Left Point
 				position_array[arrayPosition + 9] = x*scale;
@@ -208,9 +197,9 @@ int main(int argc, char* argv[]){
 					position_array[arrayPosition + 11] = (island_fractal[x][y])*(scale / 2);
 				}	
 
-				colour_array[arrayPosition + 9] = colour_float[0];
-				colour_array[arrayPosition + 10] = colour_float[1];
-				colour_array[arrayPosition + 11] = colour_float[2];
+				colour_array[arrayPosition + 9] = colour[0];
+				colour_array[arrayPosition + 10] = colour[1];
+				colour_array[arrayPosition + 11] = colour[2];
 			}
 		}
 

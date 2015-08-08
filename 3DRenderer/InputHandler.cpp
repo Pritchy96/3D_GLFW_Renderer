@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include "Logger.h"
 
 
 glm::mat4 ViewMatrix;
@@ -18,23 +19,26 @@ glm::mat4 InputHandler::getProjectionMatrix(){
 
 
 // Initial position : on +Z
-glm::vec3 position = glm::vec3(0, 0, 5);
+glm::vec3 position = glm::vec3(300, 300, 500),
+			defaultPosition = glm::vec3(0);	//Default position used when resetting camera.
 // Initial horizontal angle : toward -Z
 float horizontalAngle = 3.14f;
 // Initial vertical angle : none
 float verticalAngle = 0.0f;
-// Initial Field of View
-float initialFoV = 45.0f;
-int xmax, ymax;
+// Field of View
+float FoV = 45.0f;
+double xInitial, yInitial;
 
-float speed = 3.0f; // 3 units / second
+float speed = 30.0f; // 30 units / second
 float mouseSpeed = 0.005f;
 
 void InputHandler::setup(GLFWwindow *window)
 {
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
-
+	defaultPosition = position;
 }
 
 void InputHandler::update(GLFWwindow *window){
@@ -46,19 +50,27 @@ void InputHandler::update(GLFWwindow *window){
 	double currentTime = glfwGetTime();
 	float deltaTime = float(currentTime - lastTime);
 
-	// Get mouse position
 	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
 
-	//Get window size.
-	glfwGetWindowSize(window, &xmax, &ymax);
+	//Get mouse state for left click
+	int state = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
 
-	// Reset mouse position for next frame
-	glfwSetCursorPos(window, xmax / 2, ymax / 2);
+	//While left click is pressed..
+	if (state == GLFW_PRESS)
+	{
+		// Get mouse position for this tick.
+		glfwGetCursorPos(window, &xpos, &ypos);
 
-	// Compute new orientation
-	horizontalAngle += mouseSpeed * float(xmax / 2 - xpos);
-	verticalAngle += mouseSpeed * float(ymax / 2 - ypos);
+		// Compute new orientation: difference between last position and current positon 
+		//Multiplied by a coefficient to make it a nicer speed.
+		horizontalAngle +=  mouseSpeed * float(xInitial - xpos);
+		verticalAngle +=  mouseSpeed * float(yInitial - ypos);
+
+		//Set last x and y pos to current x and y pos for next update/tick.
+		xInitial = xpos;
+		yInitial = ypos;
+	}
+	
 
 	// Direction : Spherical coordinates to Cartesian coordinates conversion
 	glm::vec3 direction(
@@ -94,10 +106,8 @@ void InputHandler::update(GLFWwindow *window){
 		position -= right * deltaTime * speed;
 	}
 
-	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
-
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);
+	ProjectionMatrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 10000.0f);
 	// Camera matrix
 	ViewMatrix = glm::lookAt(
 		position,           // Camera is here
@@ -109,6 +119,16 @@ void InputHandler::update(GLFWwindow *window){
 	lastTime = currentTime;
 }
 
+void InputHandler::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		//Set initial position of mouse to current mouse pos.
+		//This is so we can find out how far we've dragged on the next tick.
+		glfwGetCursorPos(window, &xInitial, &yInitial);
+	}
+		
+}
 
 void InputHandler::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -137,9 +157,22 @@ void InputHandler::key_callback(GLFWwindow* window, int key, int scancode, int a
 				}
 			}
 			break;
+		case(GLFW_KEY_SPACE) :
+			//Reset Camera rotation and position to initial vals.
+			position = defaultPosition;
+			horizontalAngle = 3.14f;
+			verticalAngle = 0.0f;
+			break;
 
 		default:
 			break;
 		}
 	}
+}
+
+void InputHandler::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	//Normal mouse just has yoffset.
+	Logger::log(to_string(yoffset), false, true);
+	FoV -= yoffset/10;
 }

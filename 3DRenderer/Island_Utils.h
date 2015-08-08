@@ -9,7 +9,7 @@ namespace Island_Utils
 {
 	vector<vector<int>> FlattenWater(vector<vector<int>> *elevationMap);
 	vector<vector<int>> CalculateBiomes(vector<vector<int>> *elevationMap, vector<vector<int>> *moistureMap);
-	vector<int> GetBiomeColour(int biome);
+	vector<float> GetBiomeColour(int biome);
 	vector<vector<int>> MakeCircularGradient(int width, int height, int maxValue = 255, int minValue = 0);
 	vector<vector<int>> InterpolateBitmaps(vector<vector<int>> *bmp1, vector<vector<int>> *bmp2, double bmp1Coeff = 0.5,
 		double bmp2Coeff = 0.5, int offset = 0, int maxValue = 255, int minValue = 0);

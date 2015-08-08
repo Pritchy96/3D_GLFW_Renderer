@@ -62,7 +62,7 @@ namespace Island_Utils
 		return minVal;
 	}
 
-	
+
 
 	void MakeIsland()
 	{
@@ -106,7 +106,7 @@ namespace Island_Utils
 					//Make the elevation a flat level
 					(*elevationMap)[x][y] = 300;
 				}
-				
+
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace Island_Utils
 		int width = (*elevationMap).size(), height = (*elevationMap)[0].size();
 		//Whittaker diagram has four rows for Elevation, 6 for Moisture. This is converting the 0-x to 1-6 and 1-4.
 		float maxHeight = (float)GetMaxValue(elevationMap), maxMoisture = (float)GetMaxValue(moistureMap), minMoisture = (float)GetMinValue(moistureMap);
-		float heightZone = maxHeight / 4, moistureZone = (maxMoisture-minMoisture) / 6;
+		float heightZone = maxHeight / 4, moistureZone = (maxMoisture - minMoisture) / 6;
 
 		vector<vector<int>>  colouredIsland = vector<vector<int>>();
 		//Resizing array and setting all values to 0.
@@ -154,15 +154,15 @@ namespace Island_Utils
 					}
 					else if ((*elevationMap)[x][y] <= 2 * heightZone)
 					{
-						if (moistureVal<= 1 * moistureZone)
+						if (moistureVal <= 1 * moistureZone)
 						{
 							colouredIsland[x][y] = 4;
 						}
-						else if (moistureVal<= 3 * moistureZone)
+						else if (moistureVal <= 3 * moistureZone)
 						{
 							colouredIsland[x][y] = 1;
 						}
-						else if (moistureVal<= 5 * moistureZone)
+						else if (moistureVal <= 5 * moistureZone)
 						{
 							colouredIsland[x][y] = 5;
 						}
@@ -173,11 +173,11 @@ namespace Island_Utils
 					}
 					else if ((*elevationMap)[x][y] <= 3 * heightZone)
 					{
-						if (moistureVal<= 2 * moistureZone)
+						if (moistureVal <= 2 * moistureZone)
 						{
 							colouredIsland[x][y] = 4;
 						}
-						else if (moistureVal<= 4 * moistureZone)
+						else if (moistureVal <= 4 * moistureZone)
 						{
 							colouredIsland[x][y] = 7;
 						}
@@ -188,15 +188,15 @@ namespace Island_Utils
 					}
 					else //if ((*elevationMap)[x][y] <= 4 * heightZone)   //Snow and mountains
 					{
-						if (moistureVal<= 1 * moistureZone)
+						if (moistureVal <= 1 * moistureZone)
 						{
 							colouredIsland[x][y] = 9;
 						}
-						else if (moistureVal<= 2 * moistureZone)
+						else if (moistureVal <= 2 * moistureZone)
 						{
 							colouredIsland[x][y] = 10;
 						}
-						else if (moistureVal<= 3 * moistureZone)
+						else if (moistureVal <= 3 * moistureZone)
 						{
 							colouredIsland[x][y] = 11;
 						}
@@ -224,9 +224,9 @@ namespace Island_Utils
 		return colouredIsland;
 	}
 
-	vector<int> GetBiomeColour(int biome)
+	vector<float> GetBiomeColour(int biome)
 	{
-		vector<int> colour = vector<int>();
+		vector<float> colour = vector<float>();
 		colour.resize(3);
 
 		switch (biome)
@@ -234,128 +234,125 @@ namespace Island_Utils
 		case -2:
 		{
 			//Deep Sea
-			colour[0] = 28;
-			colour[1] = 50;
-			colour[2] = 63;
+			colour[0] = 0.110f;
+			colour[1] = 0.196f;
+			colour[2] = 0.247f;
 			break;
 		}
 		case -1:
 		{
 			//Shallow Sea.
-			colour[0] = 38;
-			colour[1] = 60;
-			colour[2] = 73;
+			colour[0] = 0.149f;
+			colour[1] = 0.235f;
+			colour[2] = 0.286f;
 			break;
 		}
 		case 0:
 		{
 			//SubTropical Desert
-			colour[0] = 217;
-			colour[1] = 190;
-			colour[2] = 141;
+			colour[0] = 0.851f;
+			colour[1] = 0.745f;
+			colour[2] = 0.553f;
 			break;
 		}
 		case 1:
 		{
 			//Grassland
-			colour[0] = 134;
-			colour[1] = 170;
-			colour[2] = 76;
+			colour[0] = 0.525f;
+			colour[1] = 0.667f;
+			colour[2] = 0.298f;
 			break;
 		}
 		case 2:
 		{
 			//Tropical Seasonal Forest/Savanna
-			colour[0] = 75;
-			colour[1] = 101;
-			colour[2] = 101;
+			colour[0] = 0.294f;
+			colour[1] = 0.396f;
+			colour[2] = 0.396f;
 			break;
 		}
 		case 3:
 		{
 			//Tropical Rain Forest
-			colour[0] = 44;
-			colour[1] = 114;
-			colour[2] = 73;
+			colour[0] = 0.173f;
+			colour[1] = 0.447f;
+			colour[2] = 0.286f;
 
 			break;
 		}
 		case 4:
 		{
 			//Temperate Desert
-			colour[0] = 206;
-			colour[1] = 214;
-			colour[2] = 147;
+			colour[0] = 0.808f;
+			colour[1] = 0.839f;
+			colour[2] = 0.576f;
 			break;
 		}
 		case 5:
 		{
 			//Temperate Deciduous Forest
-			colour[0] = 98;
-			colour[1] = 145;
-			colour[2] = 73;
+			colour[0] = 0.384f;
+			colour[1] = 0.569f;
+			colour[2] = 0.286f;
 			break;
 		}
 		case 6:
 		{
 			//Temperate Rain Forest
-			colour[0] = 62;
-			colour[1] = 134;
-			colour[2] = 71;
+			colour[0] = 0.243f;
+			colour[1] = 0.525f;
+			colour[2] = 0.278f;
 			break;
 		}
 		case 7:
 		{
 			//Shrubland
-			colour[0] = 134;
-			colour[1] = 152;
-			colour[2] = 114;
+			colour[0] = 0.525f;
+			colour[1] = 0.596f;
+			colour[2] = 0.447f;
 			break;
 		}
 		case 8:
 		{
 			//Taiga
-			colour[0] = 152;
-			colour[1] = 170;
-			colour[2] = 114;
+			colour[0] = 0.596f;
+			colour[1] = 0.667f;
+			colour[2] = 0.447f;
 			break;
 		}
 		case 9:
 		{
 			//Scorched
-			colour[0] = 38;
-			colour[1] = 38;
-			colour[2] = 38;
+			colour[0] = 0.149f;
+			colour[1] = 0.149f;
+			colour[2] = 0.149f;
 			break;
 		}
 		case 10:
 		{
 			//Bare
-			colour[0] = 114;
-			colour[1] = 114;
-			colour[2] = 114;
+			colour[0] = 0.447f;
+			colour[1] = 0.447f;
+			colour[2] = 0.447f;
 			break;
 		}
 		case 11:
 		{
 			//Tundra
-			colour[0] = 190;
-			colour[1] = 190;
-			colour[2] = 114;
+			colour[0] = 0.745f;
+			colour[1] = 0.745f;
+			colour[2] = 0.447f;
 			break;
 		}
 		case 12:
 		{
 			//Snow
-			colour[0] = 250;
-			colour[1] = 250;
-			colour[2] = 250;
+			colour[0] = 0.980f;
+			colour[1] = 0.980f;
+			colour[2] = 0.980f;
 			break;
 		}
-
-
 		}
-
 		return colour;
 	}
 
@@ -458,10 +455,10 @@ namespace Island_Utils
 		{
 			for (int y = 0; y < height; y++)
 			{
-				vector<int> colour = Island_Utils::GetBiomeColour((*array)[x][y]);
-				image(x, y)->Red = colour[0];
-				image(x, y)->Green = colour[1];
-				image(x, y)->Blue = colour[2];
+				vector<float> colour = Island_Utils::GetBiomeColour((*array)[x][y]);
+				image(x, y)->Red = colour[0] * 255;
+				image(x, y)->Green = colour[1] * 255;
+				image(x, y)->Blue = colour[2] * 255;
 			}
 		}
 
