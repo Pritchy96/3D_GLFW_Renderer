@@ -81,7 +81,7 @@ namespace Island_Utils
 		elevationMap = FlattenWater(&elevationMap);
 
 		Logger::log("Generating Moisture Fractal", false, true);
-		moistureMap = maker.MakeFractal(width, height, 8, 255, 0);
+		moistureMap = maker.MakeFractal(width, height, 120, 255, 0);
 		//Logger::log("Interpolating Rain Fractal with Gradient Map to make Moisture Map", false, true);
 		//moistureMap = InterpolateBitmaps(&elevationMap, &gradientMap, 1.0f, 1.5f, 0, 10000);
 

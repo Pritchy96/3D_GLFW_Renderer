@@ -1,9 +1,9 @@
-Time/Date of Log: Sat Aug 08 05:03:17 2015
+Time/Date of Log: Mon Aug 24 05:45:17 2015
 
 
 Log Start:
-AMD Radeon HD 7800 Series
-4.5.13397 Compatibility Profile Context 15.200.1046.0
+Intel(R) HD Graphics 4600
+4.2.0 - Build 10.18.10.4226
 Generating Gradient Map
 Generating Height Fractal
 Interpolating Height Fractal with Gradient Map to make Elevation Map
@@ -11,5 +11,8 @@ Generating Moisture Fractal
 Calculating Biomes
 Saving Biome Image
 vert_shader.glsl
+vert_shader.glsl
+
 Linking program
+
 
