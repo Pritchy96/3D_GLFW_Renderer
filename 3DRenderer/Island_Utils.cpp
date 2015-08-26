@@ -16,7 +16,7 @@ using namespace std;
 // ----------------------------------------------------------C:\Windows\SysWOW64
 
 
-const int width = 600, height = 600, waterLevel = 300;
+const int width = 1, height = 1, waterLevel = 300;
 vector<vector<int>> islandFractal, islandShape, elevationMap, moistureMap, islandColoured, gradientMap;
 int maxHeight = 0;
 

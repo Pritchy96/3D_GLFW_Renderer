@@ -12,6 +12,7 @@
 #include "InputHandler.h"
 #include "Island_Utils.h"
 #include "Util.h"
+#include "QuadTree.h"
 using namespace std;
 
 
@@ -120,7 +121,26 @@ int main(int argc, char* argv[]){
 		//Anti Aliasing
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
-#pragma region reading island array
+#pragma region creating cube
+
+		/*
+		Island_Utils::MakeIsland();
+		island_fractal = Island_Utils::GetIslandFractal();
+		island_colour = Island_Utils::GetIslandColoured();
+
+		int arraySize = island_fractal.size()*island_fractal[0].size();
+		vector<float> position_array, colour_array;
+		position_array.resize(arraySize * 12);
+		colour_array.resize(arraySize * 12);
+		
+		for (int y = 0; y < island_fractal[0].size(); y++)
+		{
+			for (int x = 0; x < island_fractal.size(); x++)
+			{										
+
+			}
+		}
+		*/
 
 		Island_Utils::MakeIsland();
 		island_fractal = Island_Utils::GetIslandFractal();
@@ -131,77 +151,8 @@ int main(int argc, char* argv[]){
 		position_array.resize(arraySize * 12);
 		colour_array.resize(arraySize * 12);
 
-		for (int y = 0; y < island_fractal[0].size(); y++)
-		{
-			for (int x = 0; x < island_fractal.size(); x++)
-			{
-				int arrayPosition = Util::To1DArray(x, y, island_fractal.size()) * 12;
+		QuadTree face = *(new QuadTree(glm::vec3(0, 0, 0), glm::vec3(10, 0, 0), glm::vec3(0, 10, 0), glm::vec3(10, 10, 0), 2));
 
-				vector<float> colour = (Island_Utils::GetBiomeColour(island_colour[x][y]));
-
-
-				//Top Left point
-				position_array[arrayPosition] = x*scale;
-				position_array[arrayPosition + 1] = y*scale;
-				position_array[arrayPosition + 2] = (island_fractal[x][y])*(scale/2);
-
-				colour_array[arrayPosition] = colour[0];
-				colour_array[arrayPosition + 1] = colour[1];
-				colour_array[arrayPosition + 2] = colour[2];
-				
-				//Top Right Point.
-				position_array[arrayPosition + 3] = (x + 1.0f)*scale;
-				position_array[arrayPosition + 4] = y*scale;
-
-				if (x + 1 < island_fractal.size())	
-				{
-					position_array[arrayPosition + 5] = (island_fractal[x + 1][y])*(scale / 2);
-				}
-				else
-				{
-					//If the next value in the position_array doesn't exist, just make it the same height as the top left point.
-					position_array[arrayPosition + 5] = (island_fractal[x][y])*(scale / 2);
-				}
-
-				colour_array[arrayPosition + 3] = colour[0];
-				colour_array[arrayPosition + 4] = colour[1];
-				colour_array[arrayPosition + 5] = colour[2];
-
-				//Bottom Right Point
-				position_array[arrayPosition + 6] = (x + 1.0f)*scale;
-				position_array[arrayPosition + 7] = (y + 1.0f)*scale;
-
-				if (y + 1 < island_fractal[0].size() && x + 1 < island_fractal.size())
-				{
-					position_array[arrayPosition + 8] = (island_fractal[x + 1][y + 1])*(scale / 2);
-				}
-				else
-				{
-					position_array[arrayPosition + 8] = (island_fractal[x][y])*(scale / 2);
-				}
-
-				colour_array[arrayPosition + 6] = colour[0];
-				colour_array[arrayPosition + 7] = colour[1];
-				colour_array[arrayPosition + 8] = colour[2];
-				
-				//Bottom Left Point
-				position_array[arrayPosition + 9] = x*scale;
-				position_array[arrayPosition + 10] = (y + 1.0f)*scale;
-
-				if (y + 1 < island_fractal[0].size())
-				{
-					position_array[arrayPosition + 11] = (island_fractal[x][y + 1])*(scale / 2);
-				}
-				else
-				{
-					position_array[arrayPosition + 11] = (island_fractal[x][y])*(scale / 2);
-				}	
-
-				colour_array[arrayPosition + 9] = colour[0];
-				colour_array[arrayPosition + 10] = colour[1];
-				colour_array[arrayPosition + 11] = colour[2];
-			}
-		}
 
 #pragma endregion
 
