@@ -23,6 +23,7 @@ double rotate_y = 0;
 double rotate_x = 0;
 double rotate_z = 0;
 double scale = 1;
+int maxLOD = 7, currentLOD = 4;
 
 //Window size
 int g_gl_width = 1024;
@@ -96,7 +97,7 @@ int main(int argc, char* argv[]){
 		glfwSetWindowSizeCallback(window, window_size_callback);
 
 		//Setup input handler callbacks.
-		InputHandler::setup(window);
+		InputHandler::setup(window, maxLOD);
 
 		glfwMakeContextCurrent(window);
 
@@ -148,10 +149,14 @@ int main(int argc, char* argv[]){
 
 		int arraySize = island_fractal.size()*island_fractal[0].size();
 		vector<float> position_array, colour_array;
-		position_array.resize(arraySize * 12);
+		//position_array.resize(16 * 3);
 		colour_array.resize(arraySize * 12);
 
-		QuadTree face = *(new QuadTree(glm::vec3(0, 0, 0), glm::vec3(10, 0, 0), glm::vec3(0, 10, 0), glm::vec3(10, 10, 0), 2));
+		QuadTree face = QuadTree(glm::vec3(0, 0, 0), glm::vec3(1000, 0, 0), glm::vec3(1000, 1000, 0), glm::vec3(0, 1000, 0), maxLOD);
+		position_array = face.GetVerts(InputHandler::getCurrentLOD(), position_array);
+
+
+
 
 
 #pragma endregion
@@ -200,19 +205,13 @@ int main(int argc, char* argv[]){
 #pragma endregion
 
 #pragma region Shader
-
-
-
 		GLuint shader_programme = LoadShader::LoadShaders("vert_shader.glsl", "frag_shader.glsl");
 		glLinkProgram(shader_programme);
 #pragma endregion
 
-
 		// Get a handle for our "MVP" uniform.
 		// Only at initialisation time.
 		GLuint MatrixID = glGetUniformLocation(shader_programme, "MVP");
-		
-
 
 		//Set colour that glClear sets screen to.
 		glClearColor(0.6f, 0.7f, 0.6f, 1.0f);
@@ -224,10 +223,21 @@ int main(int argc, char* argv[]){
 		//Set point size used for GL_POINTS rendering mode
 		glPointSize(2);
 
-
-
 		while (!glfwWindowShouldClose(window))
 		{
+			position_array = face.GetVerts(InputHandler::getCurrentLOD(), position_array);
+			glGenBuffers(1, &position_vbo);
+			//Bind VBO, makes it the current buffer in OpenGL's state machine
+			glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
+			//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
+			glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
+
+			//Enable the first attribute, 0, Position.
+			glEnableVertexAttribArray(0);
+			//Bind GL state to the VBO
+			glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
+			//Defining layout of our first VBO within the VAO: ""0" means define the layout for attribute number 0. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 			// Model matrix : an identity matrix (model will be at the origin)
 			//Just giving mat4 one param will make it an identity matrix

@@ -5,15 +5,18 @@
 
 using namespace std;
 
-int subLevelCount;
-glm::vec3 topLeft = glm::vec3(), topRight = glm::vec3(), bottomLeft = glm::vec3(), bottomRight = glm::vec3();
-float width, height, depth;
-vector<QuadTree> sublevels;
 
 
-QuadTree::QuadTree()
-{};
-QuadTree::QuadTree(glm::vec3 TopLeft, glm::vec3 TopRight, glm::vec3 BottomLeft, glm::vec3 BottomRight, int SubLevelCount)
+QuadTree::QuadTree(){
+
+
+
+
+
+
+};
+
+QuadTree::QuadTree(glm::vec3 TopLeft, glm::vec3 TopRight, glm::vec3 BottomRight, glm::vec3 BottomLeft, int SubLevelCount)
 {
 	subLevelCount = SubLevelCount;
 	topLeft = TopLeft;
@@ -40,12 +43,14 @@ void QuadTree::Subdivide()
 			leftMid = GetMidPoint(topLeft, bottomLeft),
 			center = GetMidPoint(topLeft, bottomRight),
 			rightMid = GetMidPoint(topRight, bottomRight),
-			bottomMid =GetMidPoint(bottomLeft, bottomRight);
+			bottomMid = GetMidPoint(bottomLeft, bottomRight);
 
-		sublevels[0] = *(new QuadTree(topLeft, topMid, leftMid, center, subLevelCount - 1));
-		sublevels[1] = *(new QuadTree(topMid, topLeft, center, rightMid, subLevelCount - 1));
-		sublevels[2] = *(new QuadTree(leftMid, center, bottomLeft, bottomMid, subLevelCount - 1));
-		sublevels[3] = *(new QuadTree(center, rightMid, bottomMid, bottomRight, subLevelCount - 1));
+		int level = subLevelCount - 1;
+
+		sublevels[0] = QuadTree(topLeft, topMid, center, leftMid, level);
+		sublevels[1] = QuadTree(topMid, topRight, rightMid, center, level);
+		sublevels[2] = QuadTree(leftMid, center, bottomMid, bottomLeft, level);
+		sublevels[3] = QuadTree(center, rightMid, bottomRight, bottomMid, level);
 	}
 
 glm::vec3 QuadTree::GetMidPoint(glm::vec3 p1, glm::vec3 p2)
@@ -54,4 +59,35 @@ glm::vec3 QuadTree::GetMidPoint(glm::vec3 p1, glm::vec3 p2)
 	}
 
 
+
+vector<float> QuadTree::GetVerts(int depthLevel, vector<float> vectors)
+	{
+		if (depthLevel == subLevelCount) 
+		{
+			vectors.push_back(topLeft.x);
+			vectors.push_back(topLeft.y);
+			vectors.push_back(topLeft.z);
+
+			vectors.push_back(topRight.x);
+			vectors.push_back(topRight.y);
+			vectors.push_back(topRight.z);
+
+			vectors.push_back(bottomRight.x);
+			vectors.push_back(bottomRight.y);
+			vectors.push_back(bottomRight.z);
+
+			vectors.push_back(bottomLeft.x);
+			vectors.push_back(bottomLeft.y);
+			vectors.push_back(bottomLeft.z);
+		}
+		else
+		{
+			for (QuadTree subs : sublevels)
+			{
+				 vectors = subs.GetVerts(depthLevel, vectors);
+			}
+		}
+
+		return vectors;
+	}
 

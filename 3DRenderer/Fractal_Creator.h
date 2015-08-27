@@ -1,6 +1,5 @@
 #pragma once
 #include "stdafx.h"
-#include "Fractal_Creator.h"
 #include "Util.h"
 #include <vector>
 #include <cstdlib>

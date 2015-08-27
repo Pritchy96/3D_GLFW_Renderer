@@ -6,7 +6,20 @@
 #include <gtc/matrix_transform.hpp>
 #include "Logger.h"
 
+// Initial position : on +Z
+glm::vec3 position = glm::vec3(300, 300, 500),
+defaultPosition = glm::vec3(0);	//Default position used when resetting camera.
+// Initial horizontal angle : toward -Z
+float horizontalAngle = 3.14f;
+// Initial vertical angle : none
+float verticalAngle = 0.0f;
+// Field of View
+float FoV = 45.0f;
+double xInitial, yInitial;
+int currentDetailLevel, maxDetailLevel;
 
+float speed = 30.0f; // 30 units / second
+float mouseSpeed = 0.005f;
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
 
@@ -16,29 +29,37 @@ glm::mat4 InputHandler::getViewMatrix(){
 glm::mat4 InputHandler::getProjectionMatrix(){
 	return ProjectionMatrix;
 }
+int InputHandler::getCurrentLOD(){
+	return currentDetailLevel;
+}
 
 
-// Initial position : on +Z
-glm::vec3 position = glm::vec3(300, 300, 500),
-			defaultPosition = glm::vec3(0);	//Default position used when resetting camera.
-// Initial horizontal angle : toward -Z
-float horizontalAngle = 3.14f;
-// Initial vertical angle : none
-float verticalAngle = 0.0f;
-// Field of View
-float FoV = 45.0f;
-double xInitial, yInitial;
 
-float speed = 30.0f; // 30 units / second
-float mouseSpeed = 0.005f;
-
-void InputHandler::setup(GLFWwindow *window)
+void InputHandler::setup(GLFWwindow *window, int MaxLOD)
 {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll_callback);
+	maxDetailLevel = MaxLOD;
+	currentDetailLevel = MaxLOD;
 
 	defaultPosition = position;
+}
+
+void InputHandler::IncreaseLOD()
+{
+	if (currentDetailLevel < maxDetailLevel)
+	{
+		currentDetailLevel++;
+	}
+}
+
+void InputHandler::DecreaseLOD()
+{
+	if (currentDetailLevel >= maxDetailLevel)
+	{
+		currentDetailLevel--;
+	}
 }
 
 void InputHandler::update(GLFWwindow *window){
@@ -157,6 +178,15 @@ void InputHandler::key_callback(GLFWwindow* window, int key, int scancode, int a
 				}
 			}
 			break;
+
+		case(GLFW_KEY_Q) :
+			InputHandler::IncreaseLOD();
+			break;
+
+		case(GLFW_KEY_R) :
+			InputHandler::DecreaseLOD();
+			break;
+
 		case(GLFW_KEY_SPACE) :
 			//Reset Camera rotation and position to initial vals.
 			position = defaultPosition;
