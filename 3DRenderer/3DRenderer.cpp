@@ -13,6 +13,7 @@
 #include "Island_Utils.h"
 #include "Util.h"
 #include "QuadTree.h"
+#include "QuadSphere.h"
 using namespace std;
 
 
@@ -23,7 +24,9 @@ double rotate_y = 0;
 double rotate_x = 0;
 double rotate_z = 0;
 double scale = 1;
-int maxLOD = 7, currentLOD = 4;
+
+int currentLOD = 0;
+QuadSphere sphere = QuadSphere(1, 5);
 
 //Window size
 int g_gl_width = 1024;
@@ -31,8 +34,6 @@ int g_gl_height = 768;
 
 //Prototypes
 void log_gl_params();
-
-vector<vector<int>> island_fractal, island_colour;
 
 
 static void error_callback(int error, const char* description)
@@ -97,7 +98,7 @@ int main(int argc, char* argv[]){
 		glfwSetWindowSizeCallback(window, window_size_callback);
 
 		//Setup input handler callbacks.
-		InputHandler::setup(window, maxLOD);
+		InputHandler::setup(window);
 
 		glfwMakeContextCurrent(window);
 
@@ -143,17 +144,8 @@ int main(int argc, char* argv[]){
 		}
 		*/
 
-		Island_Utils::MakeIsland();
-		island_fractal = Island_Utils::GetIslandFractal();
-		island_colour = Island_Utils::GetIslandColoured();
-
-		int arraySize = island_fractal.size()*island_fractal[0].size();
-		vector<float> position_array, colour_array;
-		//position_array.resize(16 * 3);
-		colour_array.resize(arraySize * 12);
-
-		QuadTree face = QuadTree(glm::vec3(0, 0, 0), glm::vec3(1000, 0, 0), glm::vec3(1000, 1000, 0), glm::vec3(0, 1000, 0), maxLOD);
-		position_array = face.GetVerts(InputHandler::getCurrentLOD(), position_array);
+		vector<float> position_array, colour_array;		
+		position_array = sphere.GetFaceVerts(currentLOD);
 
 
 
@@ -178,7 +170,7 @@ int main(int argc, char* argv[]){
 		glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
 		//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
 		//NOTE: Here we are using the same data for position as well as colour! This is not normally the case!
-		glBufferData(GL_ARRAY_BUFFER, colour_array.size() * sizeof(float), colour_array.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
 
 
 		//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
@@ -219,25 +211,14 @@ int main(int argc, char* argv[]){
 
 		// Cull triangles which normal is not towards the camera
 		glEnable(GL_CULL_FACE);
+		//glFrontFace(GL_CW);
 
 		//Set point size used for GL_POINTS rendering mode
 		glPointSize(2);
 
 		while (!glfwWindowShouldClose(window))
 		{
-			position_array = face.GetVerts(InputHandler::getCurrentLOD(), position_array);
-			glGenBuffers(1, &position_vbo);
-			//Bind VBO, makes it the current buffer in OpenGL's state machine
-			glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
-			//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
-			glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
-
-			//Enable the first attribute, 0, Position.
-			glEnableVertexAttribArray(0);
-			//Bind GL state to the VBO
-			glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
-			//Defining layout of our first VBO within the VAO: ""0" means define the layout for attribute number 0. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+			
 
 			// Model matrix : an identity matrix (model will be at the origin)
 			//Just giving mat4 one param will make it an identity matrix

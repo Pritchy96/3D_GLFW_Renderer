@@ -7,7 +7,7 @@
 #include "Logger.h"
 
 // Initial position : on +Z
-glm::vec3 position = glm::vec3(300, 300, 500),
+glm::vec3 position = glm::vec3(0, 0, 15),
 defaultPosition = glm::vec3(0);	//Default position used when resetting camera.
 // Initial horizontal angle : toward -Z
 float horizontalAngle = 3.14f;
@@ -16,9 +16,8 @@ float verticalAngle = 0.0f;
 // Field of View
 float FoV = 45.0f;
 double xInitial, yInitial;
-int currentDetailLevel, maxDetailLevel;
 
-float speed = 30.0f; // 30 units / second
+float speed = 5; // 30 units / second
 float mouseSpeed = 0.005f;
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
@@ -29,38 +28,17 @@ glm::mat4 InputHandler::getViewMatrix(){
 glm::mat4 InputHandler::getProjectionMatrix(){
 	return ProjectionMatrix;
 }
-int InputHandler::getCurrentLOD(){
-	return currentDetailLevel;
-}
 
-
-
-void InputHandler::setup(GLFWwindow *window, int MaxLOD)
+void InputHandler::setup(GLFWwindow *window)
 {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-	maxDetailLevel = MaxLOD;
-	currentDetailLevel = MaxLOD;
 
 	defaultPosition = position;
 }
 
-void InputHandler::IncreaseLOD()
-{
-	if (currentDetailLevel < maxDetailLevel)
-	{
-		currentDetailLevel++;
-	}
-}
 
-void InputHandler::DecreaseLOD()
-{
-	if (currentDetailLevel >= maxDetailLevel)
-	{
-		currentDetailLevel--;
-	}
-}
 
 void InputHandler::update(GLFWwindow *window){
 
@@ -180,11 +158,11 @@ void InputHandler::key_callback(GLFWwindow* window, int key, int scancode, int a
 			break;
 
 		case(GLFW_KEY_Q) :
-			InputHandler::IncreaseLOD();
+			
 			break;
 
-		case(GLFW_KEY_R) :
-			InputHandler::DecreaseLOD();
+		case(GLFW_KEY_E) :
+			
 			break;
 
 		case(GLFW_KEY_SPACE) :

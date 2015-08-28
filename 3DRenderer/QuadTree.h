@@ -19,5 +19,8 @@ public:
 	glm::vec3 GetMidPoint(glm::vec3 p1, glm::vec3 p2);
 	void Subdivide();
 	vector<float> GetVerts(int depthLevel, vector<float> vectors);
+	void SetVerts(vector<float> vectors);
+
+	glm::vec3 MakeSphere(glm::vec3 in);
 };
 
