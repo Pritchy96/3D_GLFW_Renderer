@@ -10,7 +10,9 @@ public:
 	vector<float> GetFaceVerts(int currentLOD);
 	void ConvertToSphere();
 	~QuadSphere();
+	int GetMaxLOD();
 private:
 	vector<QuadTree> faces;
+	int maxLOD = 0;
 };
 

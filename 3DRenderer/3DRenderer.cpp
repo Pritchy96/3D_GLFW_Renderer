@@ -34,6 +34,7 @@ int g_gl_height = 768;
 
 //Prototypes
 void log_gl_params();
+void ChangeLOD();
 
 
 static void error_callback(int error, const char* description)
@@ -98,7 +99,7 @@ int main(int argc, char* argv[]){
 		glfwSetWindowSizeCallback(window, window_size_callback);
 
 		//Setup input handler callbacks.
-		InputHandler::setup(window);
+		InputHandler::setup(window, 0);
 
 		glfwMakeContextCurrent(window);
 
@@ -219,7 +220,13 @@ int main(int argc, char* argv[]){
 		while (!glfwWindowShouldClose(window))
 		{
 			
-
+			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
+				if (currentLOD < sphere.GetMaxLOD())
+				{
+					currentLOD++;
+					ChangeLOD();
+				}
+			}
 			// Model matrix : an identity matrix (model will be at the origin)
 			//Just giving mat4 one param will make it an identity matrix
 			//This means that the coords (of the model) will be zero, as they are the top four rows of the last column.
@@ -258,6 +265,31 @@ int main(int argc, char* argv[]){
 	}
 }
 
+void ChangeLOD()
+{
+	vector<float> verts = sphere.GetFaceVerts(currentLOD);
+	//Create a vertex buffer object (VBO), which basically moves the position_array[] to the GPU Memory
+	GLuint position_vbo = 0;
+	glGenBuffers(1, &position_vbo);
+	//Bind VBO, makes it the current buffer in OpenGL's state machine
+	glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
+	//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
+	glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), verts.data(), GL_STATIC_DRAW);
+	//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
+	//Integer to indentify VAO with later.
+	GLuint vao = 0;
+	//"bind it, to bring it in to focus in the state machine."
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	//Enable the first attribute, 0, Position.
+	glEnableVertexAttribArray(0);
+	//Bind GL state to the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
+	//Defining layout of our first VBO within the VAO: ""0" means define the layout for attribute number 0. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+}
 
 void log_gl_params() {
 	GLenum params[] = {

@@ -16,7 +16,6 @@ float verticalAngle = 0.0f;
 // Field of View
 float FoV = 45.0f;
 double xInitial, yInitial;
-
 float speed = 5; // 30 units / second
 float mouseSpeed = 0.005f;
 glm::mat4 ViewMatrix;
@@ -29,7 +28,7 @@ glm::mat4 InputHandler::getProjectionMatrix(){
 	return ProjectionMatrix;
 }
 
-void InputHandler::setup(GLFWwindow *window)
+void InputHandler::setup(GLFWwindow *window, int maxLOD)
 {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
