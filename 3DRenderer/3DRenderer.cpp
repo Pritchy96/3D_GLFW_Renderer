@@ -27,10 +27,13 @@ double scale = 1;
 
 int currentLOD = 0;
 QuadSphere sphere = QuadSphere(1, 5);
+GLuint position_vbo = 0;
 
 //Window size
 int g_gl_width = 1024;
 int g_gl_height = 768;
+
+vector<float> position_array, colour_array;
 
 //Prototypes
 void log_gl_params();
@@ -145,7 +148,7 @@ int main(int argc, char* argv[]){
 		}
 		*/
 
-		vector<float> position_array, colour_array;		
+		
 		position_array = sphere.GetFaceVerts(currentLOD);
 
 
@@ -157,7 +160,6 @@ int main(int argc, char* argv[]){
 #pragma region Setting up VAO
 
 		//Create a vertex buffer object (VBO), which basically moves the position_array[] to the GPU Memory
-		GLuint position_vbo = 0;
 		glGenBuffers(1, &position_vbo);
 		//Bind VBO, makes it the current buffer in OpenGL's state machine
 		glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
@@ -227,6 +229,14 @@ int main(int argc, char* argv[]){
 					ChangeLOD();
 				}
 			}
+			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
+				if (currentLOD > 0)
+				{
+					currentLOD--;
+					ChangeLOD();
+				}
+			}
+
 			// Model matrix : an identity matrix (model will be at the origin)
 			//Just giving mat4 one param will make it an identity matrix
 			//This means that the coords (of the model) will be zero, as they are the top four rows of the last column.
@@ -267,14 +277,12 @@ int main(int argc, char* argv[]){
 
 void ChangeLOD()
 {
-	vector<float> verts = sphere.GetFaceVerts(currentLOD);
-	//Create a vertex buffer object (VBO), which basically moves the position_array[] to the GPU Memory
-	GLuint position_vbo = 0;
-	glGenBuffers(1, &position_vbo);
-	//Bind VBO, makes it the current buffer in OpenGL's state machine
+	position_array.clear();
+	position_array = sphere.GetFaceVerts(currentLOD);
 	glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
-	//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
-	glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), verts.data(), GL_STATIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, position_array.size(), (position_array.data()));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
 	//Integer to indentify VAO with later.
 	GLuint vao = 0;

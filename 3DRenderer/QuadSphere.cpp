@@ -13,9 +13,10 @@ QuadSphere::QuadSphere(float size, int MaxLOD)
 	maxLOD = MaxLOD;
 	//Positioned at -1 so it is between -1 and 1 (cubicSphere algorithm only works for that range)
 	//Back
-	faces.push_back(QuadTree(glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1), MaxLOD));
-	////Front
 	faces.push_back(QuadTree(glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(size, size, size), glm::vec3(-1, size, size), MaxLOD));
+	
+	////Front
+	faces.push_back(QuadTree(glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1), MaxLOD));
 	////Top
 	faces.push_back(QuadTree(glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(-1, size, size), glm::vec3(size, size, size), MaxLOD));
 	////Bottom
