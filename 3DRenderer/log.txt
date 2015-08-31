@@ -1,10 +1,12 @@
-Time/Date of Log: Sun Aug 30 03:49:47 2015
+Time/Date of Log: Mon Aug 31 16:45:16 2015
 
 
 Log Start:
-AMD Radeon HD 7800 Series
-4.5.13399 Compatibility Profile Context 15.200.1062.1003
+Intel(R) HD Graphics 4600
+4.2.0 - Build 10.18.10.4226
 vert_shader.glsl
+vert_shader.glsl
+
 Linking program
 
-3.000000
+
