@@ -31,6 +31,7 @@ int QuadSphere::GetMaxLOD()
 {
 	return maxLOD;
 }
+
 vector<float> QuadSphere::GetFaceVerts(int currentLOD)
 {
 	vector<float> verts;
@@ -42,24 +43,29 @@ vector<float> QuadSphere::GetFaceVerts(int currentLOD)
 	return verts;
 }
 
+
 //Not Used.
-void QuadSphere::ConvertToSphere()
+vector<float> QuadSphere::ConvertToSphere(int currentLOD)
 {
+	vector<float> sphereFloats;
+
 	for (QuadTree tree : faces)
 	{
-		vector<float> verts = tree.GetVerts(0, verts), temp;
+		vector<float> verts = tree.GetVerts(currentLOD, verts);
 
 		for (int i = 0; i < verts.size() / 3; i++)
 		{
 			float dx = verts[(i * 3)] * sqrtf(1.0 - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) + (verts[(i * 3) + 1] * verts[(i * 3) + 1] * verts[(i * 3) + 2] * verts[(i * 3) + 2] / 3.0));
 			float dy = verts[(i * 3) + 1] * sqrtf(1.0 - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) - (verts[(i * 3)] * verts[(i * 3)] / 2.0) + (verts[(i * 3) + 2] * verts[(i * 3) + 2] * verts[(i * 3)] * verts[(i * 3)] / 3.0));
 			float dz = verts[(i * 3) + 2] * sqrtf(1.0 - (verts[(i * 3)] * verts[(i * 3)] / 2.0) - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) + (verts[(i * 3)] * verts[(i * 3)] * verts[(i * 3) + 1] * verts[(i * 3) + 1] / 3.0));
-			temp.push_back(dx);
-			temp.push_back(dy);
-			temp.push_back(dz);
+			sphereFloats.push_back(dx);
+			sphereFloats.push_back(dy);
+			sphereFloats.push_back(dz);
 		}
-		tree.SetVerts(temp);
+		
 	}
+
+	return sphereFloats;
 
 	/*
 	float dx = x * sqrtf(1.0 - (y*y / 2.0) - (z*z / 2.0) + (y*y*z*z / 3.0));
@@ -71,3 +77,25 @@ void QuadSphere::ConvertToSphere()
 QuadSphere::~QuadSphere()
 {
 }
+
+
+/*
+//Not Used.
+void QuadSphere::ConvertToSphere()
+{
+for (QuadTree tree : faces)
+{
+vector<float> verts = tree.GetVerts(0, verts), temp;
+
+for (int i = 0; i < verts.size() / 3; i++)
+{
+float dx = verts[(i * 3)] * sqrtf(1.0 - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) + (verts[(i * 3) + 1] * verts[(i * 3) + 1] * verts[(i * 3) + 2] * verts[(i * 3) + 2] / 3.0));
+float dy = verts[(i * 3) + 1] * sqrtf(1.0 - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) - (verts[(i * 3)] * verts[(i * 3)] / 2.0) + (verts[(i * 3) + 2] * verts[(i * 3) + 2] * verts[(i * 3)] * verts[(i * 3)] / 3.0));
+float dz = verts[(i * 3) + 2] * sqrtf(1.0 - (verts[(i * 3)] * verts[(i * 3)] / 2.0) - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) + (verts[(i * 3)] * verts[(i * 3)] * verts[(i * 3) + 1] * verts[(i * 3) + 1] / 3.0));
+temp.push_back(dx);
+temp.push_back(dy);
+temp.push_back(dz);
+}
+tree.SetVerts(temp);
+}
+*/

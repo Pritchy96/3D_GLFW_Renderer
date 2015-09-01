@@ -8,7 +8,7 @@ public:
 	QuadSphere();
 	QuadSphere(float size, int maxLOD);
 	vector<float> GetFaceVerts(int currentLOD);
-	void ConvertToSphere();
+	vector<float> ConvertToSphere(int currentLOD);
 	~QuadSphere();
 	int GetMaxLOD();
 private:

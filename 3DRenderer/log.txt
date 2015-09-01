@@ -1,12 +1,23 @@
-Time/Date of Log: Mon Aug 31 16:45:16 2015
+Time/Date of Log: Tue Sep 01 02:41:37 2015
 
 
 Log Start:
 Intel(R) HD Graphics 4600
 4.2.0 - Build 10.18.10.4226
+Generating QuadSphere
+Loading Shaders
 vert_shader.glsl
 vert_shader.glsl
 
 Linking program
 
 
+Intel(R) HD Graphics 4600
+Changing LOD: New LOD Value is %s1
+Rendering as Sphere
+Changing LOD: New LOD Value is %s2
+Rendering as Sphere
+Changing LOD: New LOD Value is %s1
+Rendering as Sphere
+Changing LOD: New LOD Value is %s2
+Rendering as Sphere

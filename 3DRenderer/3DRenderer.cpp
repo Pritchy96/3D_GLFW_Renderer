@@ -104,7 +104,7 @@ int main(int argc, char* argv[]){
 		glfwSetWindowSizeCallback(window, window_size_callback);
 
 		//Setup input handler callbacks.
-		InputHandler::setup(window, 0);
+		InputHandler::setup(window);
 
 		glfwMakeContextCurrent(window);
 
@@ -129,34 +129,10 @@ int main(int argc, char* argv[]){
 		//Anti Aliasing
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
-#pragma region creating cube
-
-		/*
-		Island_Utils::MakeIsland();
-		island_fractal = Island_Utils::GetIslandFractal();
-		island_colour = Island_Utils::GetIslandColoured();
-
-		int arraySize = island_fractal.size()*island_fractal[0].size();
-		vector<float> position_array, colour_array;
-		position_array.resize(arraySize * 12);
-		colour_array.resize(arraySize * 12);
-		
-		for (int y = 0; y < island_fractal[0].size(); y++)
-		{
-			for (int x = 0; x < island_fractal.size(); x++)
-			{										
-
-			}
-		}
-		*/
-
-		
-		position_array = sphere.GetFaceVerts(currentLOD);
-
-
-
-
-
+#pragma region Create Sphere
+		//GetMaxLOD gives least detailed version of the model, faster loading.
+		Logger::log(("Generating QuadSphere"), false, true);
+		position_array = sphere.ConvertToSphere(sphere.GetMaxLOD());
 #pragma endregion
 
 #pragma region Setting up VAO
@@ -201,7 +177,8 @@ int main(int argc, char* argv[]){
 
 #pragma endregion
 
-#pragma region Shader
+#pragma region Shader Loading
+		Logger::log(("Loading Shaders"), false, true);
 		GLuint shader_programme = LoadShader::LoadShaders("vert_shader.glsl", "frag_shader.glsl");
 		glLinkProgram(shader_programme);
 #pragma endregion
@@ -221,9 +198,10 @@ int main(int argc, char* argv[]){
 		//Set point size used for GL_POINTS rendering mode
 		glPointSize(2);
 
+		Logger::log(("Entering Update Loop", renderer), false, true);
+
 		while (!glfwWindowShouldClose(window))
 		{
-			
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
 				if (currentLOD < sphere.GetMaxLOD())
 				{
@@ -281,8 +259,21 @@ int main(int argc, char* argv[]){
 
 void ChangeLOD()
 {
+	Logger::log(("Changing LOD: New LOD Value is " + to_string(currentLOD)), false, true);
+
 	position_array.clear();
-	position_array = sphere.GetFaceVerts(currentLOD);
+	if (InputHandler::getRenderAsSphere())
+	{
+		Logger::log(("Rendering as Sphere"), false, true);
+		position_array = sphere.ConvertToSphere(currentLOD);
+	}
+	else
+	{
+		//Return as cube, not sphere.
+		Logger::log(("Rendering as Cube"), false, true);
+		position_array = sphere.GetFaceVerts(currentLOD);
+	}
+
 #pragma region Setting up VAO
 
 	GLuint position_vbo = 0;

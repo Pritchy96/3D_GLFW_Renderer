@@ -20,6 +20,7 @@ float speed = 5; // 30 units / second
 float mouseSpeed = 0.005f;
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
+bool renderAsSphere = true;
 
 glm::mat4 InputHandler::getViewMatrix(){
 	return ViewMatrix;
@@ -28,7 +29,11 @@ glm::mat4 InputHandler::getProjectionMatrix(){
 	return ProjectionMatrix;
 }
 
-void InputHandler::setup(GLFWwindow *window, int maxLOD)
+bool InputHandler::getRenderAsSphere() {
+	return renderAsSphere;
+}
+
+void InputHandler::setup(GLFWwindow *window)
 {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
@@ -130,7 +135,7 @@ void InputHandler::mouse_button_callback(GLFWwindow* window, int button, int act
 
 void InputHandler::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
+	if (action == GLFW_PRESS)
 	{
 		switch (key)
 		{
@@ -139,30 +144,26 @@ void InputHandler::key_callback(GLFWwindow* window, int key, int scancode, int a
 			break;
 
 		case(GLFW_KEY_V) :
-			if (action == GLFW_PRESS)
+
+			GLint  mode[2];
+			glGetIntegerv(GL_POLYGON_MODE, mode);
+			if (mode[0] == GL_LINE)
 			{
-				GLint  mode[2];
-				glGetIntegerv(GL_POLYGON_MODE, mode);
-				if (mode[0] == GL_LINE)
-				{
-					//Sets up wirefram by setting the FRONT facing faces to GL_LINE.
-					glPolygonMode(GL_FRONT, GL_FILL);
-				}
-				else
-				{
-					//Sets up wirefram by setting the FRONT facing faces to GL_LINE.
-					glPolygonMode(GL_FRONT, GL_LINE);
-				}
+				//Sets up wirefram by setting the FRONT facing faces to GL_LINE.
+				glPolygonMode(GL_FRONT, GL_FILL);
+			}
+			else
+			{
+				//Sets up wirefram by setting the FRONT facing faces to GL_LINE.
+				glPolygonMode(GL_FRONT, GL_LINE);
 			}
 			break;
 
-		case(GLFW_KEY_Q) :
-			
+		case(GLFW_KEY_TAB) :
+			//Flip render as sphere bool.
+			renderAsSphere = !renderAsSphere;
 			break;
 
-		case(GLFW_KEY_E) :
-			
-			break;
 
 		case(GLFW_KEY_SPACE) :
 			//Reset Camera rotation and position to initial vals.

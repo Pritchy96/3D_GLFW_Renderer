@@ -2,6 +2,11 @@ Convert Controls to use Quaternions
 Trial Textures
 Automate Camera starting at map center - based on map size.
 Move Camera position movement to callback.
+Replace old sprintf_s code in fram rate updater
+add poly/vert count in title bar.
+update debug/logger.
+Clean up ChangeLOD().
+
 
 
 DONE
@@ -13,3 +18,21 @@ Set Scale to 1 instead of 0.01
 Camera now starts at center of map
 Converted Colours to floats
 Crappy zoom added using scroll wheel to modify FOV
+
+27/08/15
+Started work on Planets.
+Began to flesh out the QuadTree Structure.
+
+28/08/15
+QuadTree structure now works.
+Rendering QuadCube to screen.
+Subdivision of Quadtree now works.
+
+29/08/15
+Can now generate a sphere from the Quadtree. Can't change LOD at runtime.
+
+01/09/15
+Changing LOD now works at runtime. 
+Can now switch between rendering cube and sphere by using tab.
+Work beginning on new data structuring.
+Added some lines to the logger.

@@ -29,14 +29,6 @@ QuadTree::QuadTree(glm::vec3 TopLeft, glm::vec3 TopRight, glm::vec3 BottomRight,
 		//Make them.
 		Subdivide();
 	}
-	else
-	{
-		//Make Cube into Sphere!
-		topLeft = MakeSphere(TopLeft);
-		topRight = MakeSphere(TopRight);
-		bottomLeft = MakeSphere(BottomLeft);
-		bottomRight = MakeSphere(BottomRight);
-	}
 }
 
 void QuadTree::Subdivide()
@@ -100,6 +92,7 @@ vector<float> QuadTree::GetVerts(int depthLevel, vector<float> vectors)
 		return vectors;
 	}
 
+//Not currently used.
 glm::vec3 QuadTree::MakeSphere(glm::vec3 in)
 {
 	//'bends' cube section into sphere, see:
