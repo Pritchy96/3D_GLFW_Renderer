@@ -11,10 +11,10 @@ QuadSphere::QuadSphere()
 QuadSphere::QuadSphere(float size, int MaxLOD)
 {
 	maxLOD = MaxLOD;
+	currentLOD = MaxLOD;
 	//Positioned at -1 so it is between -1 and 1 (cubicSphere algorithm only works for that range)
 	//Back
 	faces.push_back(QuadTree(glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(size, size, size), glm::vec3(-1, size, size), MaxLOD));
-	
 	////Front
 	faces.push_back(QuadTree(glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1), MaxLOD));
 	////Top
@@ -32,7 +32,17 @@ int QuadSphere::GetMaxLOD()
 	return maxLOD;
 }
 
-vector<float> QuadSphere::GetFaceVerts(int currentLOD)
+void QuadSphere::SetCurrentLOD(int value)
+{
+	currentLOD = value;
+}
+
+int QuadSphere::GetCurrentLOD()
+{
+	return currentLOD;
+}
+
+vector<float> QuadSphere::GetFaceVerts()
 {
 	vector<float> verts;
 
@@ -44,8 +54,7 @@ vector<float> QuadSphere::GetFaceVerts(int currentLOD)
 }
 
 
-//Not Used.
-vector<float> QuadSphere::ConvertToSphere(int currentLOD)
+vector<float> QuadSphere::ConvertToSphere()
 {
 	vector<float> sphereFloats;
 

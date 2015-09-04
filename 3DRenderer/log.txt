@@ -1,9 +1,9 @@
-Time/Date of Log: Tue Sep 01 02:41:37 2015
+Time/Date of Log: Fri Sep 04 23:19:27 2015
 
 
 Log Start:
-Intel(R) HD Graphics 4600
-4.2.0 - Build 10.18.10.4226
+GeForce GTX 950M/PCIe/SSE2
+4.5.0 NVIDIA 353.06
 Generating QuadSphere
 Loading Shaders
 vert_shader.glsl
@@ -12,12 +12,10 @@ vert_shader.glsl
 Linking program
 
 
-Intel(R) HD Graphics 4600
-Changing LOD: New LOD Value is %s1
+GeForce GTX 950M/PCIe/SSE2
+Changing LOD: New LOD Value is 4
 Rendering as Sphere
-Changing LOD: New LOD Value is %s2
+Changing LOD: New LOD Value is 3
 Rendering as Sphere
-Changing LOD: New LOD Value is %s1
-Rendering as Sphere
-Changing LOD: New LOD Value is %s2
+Changing LOD: New LOD Value is 2
 Rendering as Sphere

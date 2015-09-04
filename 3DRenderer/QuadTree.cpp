@@ -5,8 +5,6 @@
 
 using namespace std;
 
-
-
 QuadTree::QuadTree(){
 };
 
@@ -56,8 +54,6 @@ glm::vec3 QuadTree::GetMidPoint(glm::vec3 p1, glm::vec3 p2)
 		//Make sure p1 is the smaller value!
 		return glm::vec3(p1.x + ((p2.x - p1.x) / 2), p1.y + ((p2.y - p1.y) / 2), p1.z + ((p2.z - p1.z) / 2));
 	}
-
-
 
 vector<float> QuadTree::GetVerts(int depthLevel, vector<float> vectors)
 	{

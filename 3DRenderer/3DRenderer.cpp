@@ -27,7 +27,6 @@ double scale = 1;
 //Integer to indentify VAO with later.
 GLuint vao = 0;
 
-int currentLOD = 0;
 QuadSphere sphere = QuadSphere(1, 5);
 
 
@@ -40,6 +39,7 @@ vector<float> position_array, colour_array;
 //Prototypes
 void log_gl_params();
 void ChangeLOD();
+void UpdateVAO();
 
 
 static void error_callback(int error, const char* description)
@@ -70,9 +70,14 @@ void update_fps_counter(GLFWwindow* window) {
 	if (elapsed_seconds > 0.25) {
 		previous_seconds = current_seconds;
 		double fps = (double)frame_count / elapsed_seconds;
-		char tmp[128];
+		char tmp[180];
+		string verts = (const char*)glGetString(GL_VERSION);
+
 		//Write formatted data to tmp string.
-		sprintf_s(tmp, "opengl renderer @ fps: %.2f", fps);
+		sprintf_s(tmp, "opengl renderer @ fps: %.2f Verts: %s", fps, verts);
+		
+		
+
 		//Set window title to string.
 		glfwSetWindowTitle(window, tmp);
 		frame_count = 0;
@@ -132,49 +137,11 @@ int main(int argc, char* argv[]){
 #pragma region Create Sphere
 		//GetMaxLOD gives least detailed version of the model, faster loading.
 		Logger::log(("Generating QuadSphere"), false, true);
-		position_array = sphere.ConvertToSphere(sphere.GetMaxLOD());
+		position_array = sphere.ConvertToSphere();
 #pragma endregion
 
 #pragma region Setting up VAO
-
-		GLuint position_vbo = 0;
-		//Create a vertex buffer object (VBO), which basically moves the position_array[] to the GPU Memory
-		glGenBuffers(1, &position_vbo);
-		//Bind VBO, makes it the current buffer in OpenGL's state machine
-		glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
-		//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
-		glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
-
-		//Create a vertex buffer object (VBO), which basically moves the array[] to the GPU Memory
-		GLuint colour_vbo = 0;
-		glGenBuffers(1, &colour_vbo);
-		//Bind VBO, makes it the current buffer in OpenGL's state machine
-		glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
-		//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
-		//NOTE: Here we are using the same data for position as well as colour! This is not normally the case!
-		glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
-
-
-		//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
-
-		//"bind it, to bring it in to focus in the state machine."
-		glGenVertexArrays(1, &vao);
-		glBindVertexArray(vao);
-
-		//Enable the first attribute, 0, Position.
-		glEnableVertexAttribArray(0);
-		//Bind GL state to the VBO
-		glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
-		//Defining layout of our first VBO within the VAO: ""0" means define the layout for attribute number 0. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-		//Enable the Second attribute, 1, Colour.
-		glEnableVertexAttribArray(1);
-		//Bind GL state to the VBO
-		glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
-		//Defining layout of our first VBO within the VAO: ""1" means define the layout for attribute number 1. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
+		UpdateVAO();
 #pragma endregion
 
 #pragma region Shader Loading
@@ -203,16 +170,16 @@ int main(int argc, char* argv[]){
 		while (!glfwWindowShouldClose(window))
 		{
 			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
-				if (currentLOD < sphere.GetMaxLOD())
+				if (sphere.GetCurrentLOD() < sphere.GetMaxLOD())
 				{
-					currentLOD++;
+					sphere.SetCurrentLOD(sphere.GetCurrentLOD() + 1);
 					ChangeLOD();
 				}
 			}
 			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
-				if (currentLOD > 0)
+				if (sphere.GetCurrentLOD() > 0)
 				{
-					currentLOD--;
+					sphere.SetCurrentLOD(sphere.GetCurrentLOD() - 1);
 					ChangeLOD();
 				}
 			}
@@ -241,7 +208,8 @@ int main(int argc, char* argv[]){
 			glUseProgram(shader_programme);
 			glBindVertexArray(vao);
 			// draw all the array in the array (remember 3 entries in the array make up one point, XYZ, so divide size by 3), from the currently bound VAO with current in-use shader
-			glDrawArrays(GL_QUADS, 0, position_array.size() / 3);
+			//glDrawArrays(GL_QUADS, 0, position_array.size() / 3);
+			glDrawElements(GL_QUADS, position_array.size(), GL_UNSIGNED_INT, (void*)0);
 			//clear array
 			glBindVertexArray(0);
 			//Update other events like input handling 
@@ -259,22 +227,30 @@ int main(int argc, char* argv[]){
 
 void ChangeLOD()
 {
-	Logger::log(("Changing LOD: New LOD Value is " + to_string(currentLOD)), false, true);
+	Logger::log(("Changing LOD: New LOD Value is " + to_string(sphere.GetCurrentLOD())), false, true);
 
 	position_array.clear();
 	if (InputHandler::getRenderAsSphere())
 	{
 		Logger::log(("Rendering as Sphere"), false, true);
-		position_array = sphere.ConvertToSphere(currentLOD);
+		position_array = sphere.ConvertToSphere();
 	}
 	else
 	{
 		//Return as cube, not sphere.
 		Logger::log(("Rendering as Cube"), false, true);
-		position_array = sphere.GetFaceVerts(currentLOD);
+		position_array = sphere.GetFaceVerts();
 	}
 
-#pragma region Setting up VAO
+	UpdateVAO();
+}
+
+void UpdateVAO()
+{
+	//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
+	//"bind it, to bring it in to focus in the state machine."
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
 
 	GLuint position_vbo = 0;
 	//Create a vertex buffer object (VBO), which basically moves the position_array[] to the GPU Memory
@@ -283,6 +259,14 @@ void ChangeLOD()
 	glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
 	//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
 	glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
+
+	//Enable the first attribute, 0, Position.
+	glEnableVertexAttribArray(0);
+	//Bind GL state to the VBO
+	glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
+	//Defining layout of our first VBO within the VAO: ""0" means define the layout for attribute number 0. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
 
 	//Create a vertex buffer object (VBO), which basically moves the array[] to the GPU Memory
 	GLuint colour_vbo = 0;
@@ -293,19 +277,6 @@ void ChangeLOD()
 	//NOTE: Here we are using the same data for position as well as colour! This is not normally the case!
 	glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
 
-
-
-	//"bind it, to bring it in to focus in the state machine."
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	//Enable the first attribute, 0, Position.
-	glEnableVertexAttribArray(0);
-	//Bind GL state to the VBO
-	glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
-	//Defining layout of our first VBO within the VAO: ""0" means define the layout for attribute number 0. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
 	//Enable the Second attribute, 1, Colour.
 	glEnableVertexAttribArray(1);
 	//Bind GL state to the VBO
@@ -313,8 +284,16 @@ void ChangeLOD()
 	//Defining layout of our first VBO within the VAO: ""1" means define the layout for attribute number 1. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-#pragma endregion
 
+	GLuint indicies_vbo = 0;
+	glGenBuffers(1, &indicies_vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicies_vbo);
+	vector<unsigned int> indices;
+	for (int i = 0; i < position_array.size(); i++)
+	{
+		indices.push_back(i);
+	}
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 }
 
 void log_gl_params() {

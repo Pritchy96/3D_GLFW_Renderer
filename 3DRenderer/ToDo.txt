@@ -2,12 +2,15 @@ Convert Controls to use Quaternions
 Trial Textures
 Automate Camera starting at map center - based on map size.
 Move Camera position movement to callback.
-Replace old sprintf_s code in fram rate updater
-add poly/vert count in title bar.
+Replace old sprintf_s code in frame rate updater
+Add poly/vert count in title bar.
 update debug/logger.
 Clean up ChangeLOD().
-
-
+Move (most of) ChangeLOD to QuadSphere.
+	This requires moving the current position_array into QuadSphere
+	A check in 3dRenderer will need to be added to check if the array has been changed
+	If so, replace vbo.
+Alternate Camera Modes.
 
 DONE
 
@@ -31,8 +34,15 @@ Subdivision of Quadtree now works.
 29/08/15
 Can now generate a sphere from the Quadtree. Can't change LOD at runtime.
 
-01/09/15
+30/08/15
 Changing LOD now works at runtime. 
+
+01/09/15
 Can now switch between rendering cube and sphere by using tab.
 Work beginning on new data structuring.
 Added some lines to the logger.
+CurrentLOD is now inside of QuadSphere rather than 3DRenderer.
+
+04/09/15
+Now uses an Indices array (currently useless, just is 0, 1, 2, 3...., implemented for new data structuring)
+Moved VAO updated code to UpdateVAO()
