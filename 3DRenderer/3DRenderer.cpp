@@ -71,13 +71,12 @@ void update_fps_counter(GLFWwindow* window) {
 		previous_seconds = current_seconds;
 		double fps = (double)frame_count / elapsed_seconds;
 		char tmp[180];
-		string verts = (const char*)glGetString(GL_VERSION);
+
+
 
 		//Write formatted data to tmp string.
-		sprintf_s(tmp, "opengl renderer @ fps: %.2f Verts: %s", fps, verts);
+		sprintf_s(tmp, "opengl renderer @ fps: %.2f", fps);
 		
-		
-
 		//Set window title to string.
 		glfwSetWindowTitle(window, tmp);
 		frame_count = 0;
@@ -87,7 +86,6 @@ void update_fps_counter(GLFWwindow* window) {
 
 int main(int argc, char* argv[]){
 	{
-
 		//Logging
 		Logger::log("Log Start:", true, true);
 
@@ -130,7 +128,6 @@ int main(int argc, char* argv[]){
 		glEnable(GL_DEPTH_TEST); // enable depth-testing
 		glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
 
-
 		//Anti Aliasing
 		glfwWindowHint(GLFW_SAMPLES, 4);
 
@@ -165,7 +162,7 @@ int main(int argc, char* argv[]){
 		//Set point size used for GL_POINTS rendering mode
 		glPointSize(2);
 
-		Logger::log(("Entering Update Loop", renderer), false, true);
+		Logger::log(("Entering Update Loop"), false, true);
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -247,6 +244,7 @@ void ChangeLOD()
 
 void UpdateVAO()
 {
+	Logger::log(("VAO Updating "), false, true);
 	//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
 	//"bind it, to bring it in to focus in the state machine."
 	glGenVertexArrays(1, &vao);
