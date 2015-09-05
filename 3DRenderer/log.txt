@@ -1,31 +1,8 @@
-Time/Date of Log: Fri Sep 04 23:44:09 2015
+Time/Date of Log: Sat Sep 05 17:24:19 2015
 
 
 Log Start:
 GeForce GTX 950M/PCIe/SSE2
 4.5.0 NVIDIA 353.06
 Generating QuadSphere
-VAO pdating 
-Loading Shaders
-vert_shader.glsl
-vert_shader.glsl
-
-Linking program
-
-
-Entering Update Loop
-Changing LOD: New LOD Value is 4
-Rendering as Sphere
-VAO pdating 
-Changing LOD: New LOD Value is 3
-Rendering as Sphere
-VAO pdating 
-Changing LOD: New LOD Value is 2
-Rendering as Sphere
-VAO pdating 
-Changing LOD: New LOD Value is 1
-Rendering as Sphere
-VAO pdating 
-Changing LOD: New LOD Value is 0
-Rendering as Sphere
-VAO pdating 
+VAO Updating 

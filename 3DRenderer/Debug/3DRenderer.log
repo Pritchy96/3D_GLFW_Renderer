@@ -1,10 +1,21 @@
-﻿Build started 04/09/2015 23:44:04.
+﻿Build started 05/09/2015 15:07:17.
      1>Project "C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\3DRenderer\3DRenderer.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\\glm /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\3DRenderer.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt 3DRenderer.cpp
-         3DRenderer.cpp
-     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\3drenderer.cpp(290): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\3drenderer.cpp(329): warning C4101: 'msg' : unreferenced local variable
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\\glm /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\3DRenderer.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt QuadSphere.cpp
+         QuadSphere.cpp
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(36): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(42): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(45): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(53): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(103): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(105): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(125): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(128): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(134): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(164): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(166): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(167): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(168): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\Debug\3DRenderer.exe" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib glfw3.lib glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\Debug\3DRenderer.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\Debug\3DRenderer.lib" /MACHINE:X86 Debug\3DRenderer.obj
          Debug\EasyBMP.obj
@@ -22,4 +33,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.77
+Time Elapsed 00:00:01.59

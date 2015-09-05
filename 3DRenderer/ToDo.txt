@@ -11,6 +11,7 @@ Move (most of) ChangeLOD to QuadSphere.
 	A check in 3dRenderer will need to be added to check if the array has been changed
 	If so, replace vbo.
 Alternate Camera Modes.
+Add vertical checks for new points in IncreaseDetail.
 
 DONE
 
@@ -46,3 +47,9 @@ CurrentLOD is now inside of QuadSphere rather than 3DRenderer.
 04/09/15
 Now uses an Indices array (currently useless, just is 0, 1, 2, 3...., implemented for new data structuring)
 Moved VAO updated code to UpdateVAO()
+
+05/09/15
+Began to implement new data structures: added IncreaseDetail() method.
+Added GetMidPoint to QuadSphere from QuadTree.
+Implemented ReturnFaceIndices() and ReturnFaceVertices().
+

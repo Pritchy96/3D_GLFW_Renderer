@@ -3,28 +3,71 @@
 #include "QuadTree.h"
 #include <vector>
 
+vector<vector<glm::vec3>> Newfaces;
+
 //Default constructor (needed for vector<QuadSphere>)
 QuadSphere::QuadSphere()
 {
 }
 
-QuadSphere::QuadSphere(float size, int MaxLOD)
+void QuadSphere::Initialise(float size)
 {
-	maxLOD = MaxLOD;
-	currentLOD = MaxLOD;
-	//Positioned at -1 so it is between -1 and 1 (cubicSphere algorithm only works for that range)
+	Newfaces.resize(6);
+	//Front
+	Newfaces[0] = vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(size, size, size), glm::vec3(-1, size, size)};
 	//Back
-	faces.push_back(QuadTree(glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(size, size, size), glm::vec3(-1, size, size), MaxLOD));
-	////Front
-	faces.push_back(QuadTree(glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1), MaxLOD));
-	////Top
-	faces.push_back(QuadTree(glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(-1, size, size), glm::vec3(size, size, size), MaxLOD));
-	////Bottom
-	faces.push_back(QuadTree(glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1), glm::vec3(size, -1, size), glm::vec3(-1, -1, size), MaxLOD));
-	////Right
-	faces.push_back(QuadTree(glm::vec3(size, -1, -1), glm::vec3(size, size, -1), glm::vec3(size, size, size), glm::vec3(size, -1, size), MaxLOD));
-	////Left
-	faces.push_back(QuadTree(glm::vec3(-1, -1, size), glm::vec3(-1, size, size), glm::vec3(-1, size, -1), glm::vec3(-1, -1, -1), MaxLOD));
+	Newfaces[1] = vector<glm::vec3>{glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1)};
+	Newfaces[2] = vector<glm::vec3>{glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(-1, size, size), glm::vec3(size, size, size)};
+	Newfaces[3] = vector<glm::vec3>{glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1), glm::vec3(size, -1, size), glm::vec3(-1, -1, size)};
+	Newfaces[4] = vector<glm::vec3>{glm::vec3(size, -1, -1), glm::vec3(size, size, -1), glm::vec3(size, size, size), glm::vec3(size, -1, size)};
+	Newfaces[5] = vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(-1, size, size), glm::vec3(-1, size, -1), glm::vec3(-1, -1, -1)};
+
+	//IncreaseDetail();
+	//IncreaseDetail();
+	//IncreaseDetail();
+	//IncreaseDetail();
+	//IncreaseDetail();
+	//IncreaseDetail();
+	//IncreaseDetail();
+}
+
+void QuadSphere::IncreaseDetail()
+{
+	for (int i = 0; i < Newfaces.size(); i++)
+	{
+		//Temp array of new points.
+		vector<glm::vec3> newPoints;
+
+		//calculate increased width.
+		int width = sqrt(Newfaces[i].size()) + 1;
+		//int newArraySize = pow(width, 2);
+		
+		for (int j = 0; j < Newfaces[i].size(); j++)
+		{
+			newPoints.push_back(Newfaces[i][j]);
+
+			int y = (int)j / width;
+			int x = j % width;
+
+			//If i isn't at the end of a row/ isn't the last value in the array..
+			if ((x != width - 1) && (j + 1 + 1 < Newfaces[i].size()))
+			{
+
+				//Add a new point which is the midpoint between the current and next point.
+				newPoints.push_back(GetMidPoint(Newfaces[i][j], Newfaces[i][j + 1]));
+			}
+		}
+
+		Newfaces[i].clear();
+		Newfaces[i] = newPoints;
+	}
+}
+
+glm::vec3 QuadSphere::GetMidPoint(glm::vec3 p1, glm::vec3 p2)
+{
+	//Simply gets the halfway point between p1 and p2 by adding half of the difference on to p1.
+	//Make sure p1 is the smaller value!
+	return glm::vec3(p1.x + ((p2.x - p1.x) / 2), p1.y + ((p2.y - p1.y) / 2), p1.z + ((p2.z - p1.z) / 2));
 }
 
 int QuadSphere::GetMaxLOD()
@@ -53,6 +96,62 @@ vector<float> QuadSphere::GetFaceVerts()
 	return verts;
 }
 
+vector<float> QuadSphere::ReturnFaceVertices()
+{
+	vector<float> verts;
+
+	for (int i = 0; i < Newfaces.size(); i++)
+	{
+		for (int j = 0; j < Newfaces[i].size(); j++)
+		{
+			verts.push_back(Newfaces[i][j].x);
+			verts.push_back(Newfaces[i][j].y);
+			verts.push_back(Newfaces[i][j].z);
+		}
+	}
+	return verts;
+}
+
+vector<int> QuadSphere::ReturnFaceIndices(int gap)
+{
+	//Converts the array of points (left to right, moving down like a book)
+	//to an array of faces (top left, top right, bottom right, bottom left).
+	//gap is the size between these face compared to the max LOD.
+
+	//Temp array of new points.
+	vector<int> indices;
+
+	//for each vert, if points[x+gap][y+gap] exists,make face
+	for (int i = 0; i < Newfaces.size(); i++)
+	{
+		//calculate increased width.
+		int width = sqrt(Newfaces[i].size());
+		//Offset to increase the indices number by for each face, so to differentiate between each face.
+		//this is because each face uses it's own array, and so they all have indices starting at zero.
+		//The offset fixes that by ofsetting each subsequent face after the first by the number of verts in a face.
+		int offset = (Newfaces[i].size())*i;
+
+		for (int j = 0; j < Newfaces[i].size(); j += gap)
+		{
+			int y = (int)j / width;
+			int x = j % width;
+
+			//If points to the right and below the vert exist, we can make a face!
+			if ((y + gap < width) && (x + gap < width))
+			{
+				//top left. (Remember, this is the position in the array of verts, not the vert data itself)
+				indices.push_back((y * width) + x + offset);
+				//top right
+				indices.push_back((y * width) + x + gap + offset);
+				//bottom right
+				indices.push_back(((y + gap) * width) + x + offset);
+				//bottom left
+				indices.push_back(((y + gap) * width) + x + gap + offset);
+			}
+		}
+	}
+	return indices;
+}
 
 vector<float> QuadSphere::ConvertToSphere()
 {

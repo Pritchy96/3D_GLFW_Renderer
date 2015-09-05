@@ -27,14 +27,15 @@ double scale = 1;
 //Integer to indentify VAO with later.
 GLuint vao = 0;
 
-QuadSphere sphere = QuadSphere(1, 5);
+QuadSphere sphere = QuadSphere();
 
 
 //Window size
 int g_gl_width = 1024;
 int g_gl_height = 768;
 
-vector<float> position_array, colour_array;
+vector<float> verts_array, colour_array;
+vector<int> indices_array;
 
 //Prototypes
 void log_gl_params();
@@ -71,8 +72,6 @@ void update_fps_counter(GLFWwindow* window) {
 		previous_seconds = current_seconds;
 		double fps = (double)frame_count / elapsed_seconds;
 		char tmp[180];
-
-
 
 		//Write formatted data to tmp string.
 		sprintf_s(tmp, "opengl renderer @ fps: %.2f", fps);
@@ -134,7 +133,7 @@ int main(int argc, char* argv[]){
 #pragma region Create Sphere
 		//GetMaxLOD gives least detailed version of the model, faster loading.
 		Logger::log(("Generating QuadSphere"), false, true);
-		position_array = sphere.ConvertToSphere();
+		sphere.Initialise(1);
 #pragma endregion
 
 #pragma region Setting up VAO
@@ -205,8 +204,8 @@ int main(int argc, char* argv[]){
 			glUseProgram(shader_programme);
 			glBindVertexArray(vao);
 			// draw all the array in the array (remember 3 entries in the array make up one point, XYZ, so divide size by 3), from the currently bound VAO with current in-use shader
-			//glDrawArrays(GL_QUADS, 0, position_array.size() / 3);
-			glDrawElements(GL_QUADS, position_array.size(), GL_UNSIGNED_INT, (void*)0);
+			//glDrawArrays(GL_QUADS, 0, verts_array.size() / 3);
+			glDrawElements(GL_QUADS, verts_array.size(), GL_UNSIGNED_INT, (void*)0);
 			//clear array
 			glBindVertexArray(0);
 			//Update other events like input handling 
@@ -226,17 +225,17 @@ void ChangeLOD()
 {
 	Logger::log(("Changing LOD: New LOD Value is " + to_string(sphere.GetCurrentLOD())), false, true);
 
-	position_array.clear();
+	verts_array.clear();
 	if (InputHandler::getRenderAsSphere())
 	{
 		Logger::log(("Rendering as Sphere"), false, true);
-		position_array = sphere.ConvertToSphere();
+		verts_array = sphere.ConvertToSphere();
 	}
 	else
 	{
 		//Return as cube, not sphere.
 		Logger::log(("Rendering as Cube"), false, true);
-		position_array = sphere.GetFaceVerts();
+		verts_array = sphere.GetFaceVerts();
 	}
 
 	UpdateVAO();
@@ -250,13 +249,14 @@ void UpdateVAO()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+	verts_array = sphere.ReturnFaceVertices();
 	GLuint position_vbo = 0;
-	//Create a vertex buffer object (VBO), which basically moves the position_array[] to the GPU Memory
+	//Create a vertex buffer object (VBO), which basically moves the verts_array[] to the GPU Memory
 	glGenBuffers(1, &position_vbo);
 	//Bind VBO, makes it the current buffer in OpenGL's state machine
 	glBindBuffer(GL_ARRAY_BUFFER, position_vbo);
 	//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
-	glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verts_array.size() * sizeof(float), verts_array.data(), GL_STATIC_DRAW);
 
 	//Enable the first attribute, 0, Position.
 	glEnableVertexAttribArray(0);
@@ -273,7 +273,7 @@ void UpdateVAO()
 	glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
 	//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
 	//NOTE: Here we are using the same data for position as well as colour! This is not normally the case!
-	glBufferData(GL_ARRAY_BUFFER, position_array.size() * sizeof(float), position_array.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verts_array.size() * sizeof(float), verts_array.data(), GL_STATIC_DRAW);
 
 	//Enable the Second attribute, 1, Colour.
 	glEnableVertexAttribArray(1);
@@ -282,16 +282,12 @@ void UpdateVAO()
 	//Defining layout of our first VBO within the VAO: ""1" means define the layout for attribute number 1. "3" means that the variables are vec3 made from every 3 floats (GL_FLOAT) in the buffer."
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-
+	
+	indices_array = sphere.ReturnFaceIndices(1);
 	GLuint indicies_vbo = 0;
 	glGenBuffers(1, &indicies_vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicies_vbo);
-	vector<unsigned int> indices;
-	for (int i = 0; i < position_array.size(); i++)
-	{
-		indices.push_back(i);
-	}
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_array.size() * sizeof(unsigned int), &indices_array[0], GL_STATIC_DRAW);
 }
 
 void log_gl_params() {
