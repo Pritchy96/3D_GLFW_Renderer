@@ -235,7 +235,7 @@ void ChangeLOD()
 	{
 		//Return as cube, not sphere.
 		Logger::log(("Rendering as Cube"), false, true);
-		verts_array = sphere.GetFaceVerts();
+		//verts_array = sphere.GetFaceVerts();
 	}
 
 	UpdateVAO();

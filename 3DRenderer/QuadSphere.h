@@ -7,7 +7,6 @@ class QuadSphere
 public:
 	QuadSphere();
 	void IncreaseDetail();
-	vector<float> GetFaceVerts();
 	vector<float> ConvertToSphere();
 	~QuadSphere();
 	void Initialise(float size);
@@ -18,7 +17,6 @@ public:
 	vector<int> ReturnFaceIndices(int gap);
 	vector<float> ReturnFaceVertices();
 private:
-	vector<QuadTree> faces;
 	int maxLOD = 0, currentLOD;
 };
 

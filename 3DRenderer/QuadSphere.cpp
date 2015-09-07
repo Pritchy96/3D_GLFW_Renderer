@@ -16,13 +16,13 @@ void QuadSphere::Initialise(float size)
 	//Front
 	Newfaces[0] = vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(size, size, size), glm::vec3(-1, size, size)};
 	//Back
-	Newfaces[1] = vector<glm::vec3>{glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1)};
-	Newfaces[2] = vector<glm::vec3>{glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(-1, size, size), glm::vec3(size, size, size)};
-	Newfaces[3] = vector<glm::vec3>{glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1), glm::vec3(size, -1, size), glm::vec3(-1, -1, size)};
-	Newfaces[4] = vector<glm::vec3>{glm::vec3(size, -1, -1), glm::vec3(size, size, -1), glm::vec3(size, size, size), glm::vec3(size, -1, size)};
-	Newfaces[5] = vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(-1, size, size), glm::vec3(-1, size, -1), glm::vec3(-1, -1, -1)};
+	//Newfaces[1] = vector<glm::vec3>{glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1)};
+	//Newfaces[2] = vector<glm::vec3>{glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(-1, size, size), glm::vec3(size, size, size)};
+	//Newfaces[3] = vector<glm::vec3>{glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1), glm::vec3(size, -1, size), glm::vec3(-1, -1, size)};
+	//Newfaces[4] = vector<glm::vec3>{glm::vec3(size, -1, -1), glm::vec3(size, size, -1), glm::vec3(size, size, size), glm::vec3(size, -1, size)};
+	//Newfaces[5] = vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(-1, size, size), glm::vec3(-1, size, -1), glm::vec3(-1, -1, -1)};
 
-	//IncreaseDetail();
+	IncreaseDetail();
 	//IncreaseDetail();
 	//IncreaseDetail();
 	//IncreaseDetail();
@@ -31,35 +31,62 @@ void QuadSphere::Initialise(float size)
 	//IncreaseDetail();
 }
 
+
 void QuadSphere::IncreaseDetail()
 {
 	for (int i = 0; i < Newfaces.size(); i++)
 	{
-		//Temp array of new points.
-		vector<glm::vec3> newPoints;
 
-		//calculate increased width.
-		int width = sqrt(Newfaces[i].size()) + 1;
-		//int newArraySize = pow(width, 2);
-		
+		//Temp array of new points.
+		vector<glm::vec3> tempVec;
+		//calculate increased newWidth.
+		int newWidth = sqrt(Newfaces[i].size()) + 1;
+		int oldWidth = sqrt(Newfaces[i].size());
+		int newArraySize = pow(newWidth, 2);
+		tempVec.resize(newArraySize);
+
+		//Loop through this face.
 		for (int j = 0; j < Newfaces[i].size(); j++)
 		{
-			newPoints.push_back(Newfaces[i][j]);
+			int y = (int)j / oldWidth;
+			int x = j % oldWidth;
 
-			int y = (int)j / width;
-			int x = j % width;
-
-			//If i isn't at the end of a row/ isn't the last value in the array..
-			if ((x != width - 1) && (j + 1 + 1 < Newfaces[i].size()))
-			{
-
-				//Add a new point which is the midpoint between the current and next point.
-				newPoints.push_back(GetMidPoint(Newfaces[i][j], Newfaces[i][j + 1]));
-			}
+			//Add in existing values to their corresponding slots.
+			tempVec[((y * 2) * newWidth) + (x * 2)] = Newfaces[i][j];
 		}
 
-		Newfaces[i].clear();
-		Newfaces[i] = newPoints;
+		//Loop through the new array.
+		for (int k = 0; k < tempVec.size() - 1; k++)
+		{
+			if (tempVec[k].x == 0 && tempVec[k].y == 0 && tempVec[k].z == 0)
+			{
+				//Add in new vert, taken from vertical points if we can, if not (at edge), from horizontal.
+				int y = (int)k / newWidth;
+				int x = k % newWidth;
+
+				//+1 so it starts from 1.
+				if (y + 1 < newWidth && y > 0 || (tempVec[(y * newWidth) + (x + 1)].x != 0 || tempVec[(y * newWidth) + (x + 1)].y != 0 ||
+					tempVec[(y * newWidth) + (x + 1)].z != 0))
+				{
+					
+					tempVec[k] = GetMidPoint(tempVec[(y * newWidth) + (x + 1)], tempVec[(y * newWidth) + (x - 1)]);
+				}
+				else if (tempVec[(y * newWidth) + (x + 1)].x != 0 || tempVec[(y * newWidth) + (x + 1)].y != 0 ||
+					tempVec[(y * newWidth) + (x + 1)].z != 0)
+				{
+			
+					//We are at the top or bottomof the array, so we can't take points from those sides. 
+					//Get points from left and right instead.
+					tempVec[k] = GetMidPoint(tempVec[(y * newWidth) + (x + 1)], tempVec[(y * newWidth) + (x - 1)]);
+				}
+				else
+				{
+					tempVec[k] = GetMidPoint(tempVec[((y + 1) * newWidth) + (x + 1)], tempVec[((y-1) * newWidth) + (x - 1)]);
+				}
+			}
+		}
+		Newfaces[i] = tempVec;
+		tempVec.clear();
 	}
 }
 
@@ -83,17 +110,6 @@ void QuadSphere::SetCurrentLOD(int value)
 int QuadSphere::GetCurrentLOD()
 {
 	return currentLOD;
-}
-
-vector<float> QuadSphere::GetFaceVerts()
-{
-	vector<float> verts;
-
-	for (QuadTree face : faces)
-	{
-		verts = face.GetVerts(currentLOD, verts);
-	}
-	return verts;
 }
 
 vector<float> QuadSphere::ReturnFaceVertices()
@@ -124,29 +140,31 @@ vector<int> QuadSphere::ReturnFaceIndices(int gap)
 	//for each vert, if points[x+gap][y+gap] exists,make face
 	for (int i = 0; i < Newfaces.size(); i++)
 	{
-		//calculate increased width.
-		int width = sqrt(Newfaces[i].size());
+		//calculate increased newWidth.
+		int newWidth = sqrt(Newfaces[i].size());
 		//Offset to increase the indices number by for each face, so to differentiate between each face.
 		//this is because each face uses it's own array, and so they all have indices starting at zero.
 		//The offset fixes that by ofsetting each subsequent face after the first by the number of verts in a face.
+
+
 		int offset = (Newfaces[i].size())*i;
 
 		for (int j = 0; j < Newfaces[i].size(); j += gap)
 		{
-			int y = (int)j / width;
-			int x = j % width;
+			int y = (int)j / newWidth;
+			int x = j % newWidth;
 
 			//If points to the right and below the vert exist, we can make a face!
-			if ((y + gap < width) && (x + gap < width))
+			if ((y + gap < newWidth) && (x + gap < newWidth))
 			{
 				//top left. (Remember, this is the position in the array of verts, not the vert data itself)
-				indices.push_back((y * width) + x + offset);
+				indices.push_back((y * newWidth) + x + offset);
 				//top right
-				indices.push_back((y * width) + x + gap + offset);
+				indices.push_back((y * newWidth) + x + gap + offset);
 				//bottom right
-				indices.push_back(((y + gap) * width) + x + offset);
+				indices.push_back(((y + gap) * newWidth) + x + offset);
 				//bottom left
-				indices.push_back(((y + gap) * width) + x + gap + offset);
+				indices.push_back(((y + gap) * newWidth) + x + gap + offset);
 			}
 		}
 	}
@@ -157,22 +175,23 @@ vector<float> QuadSphere::ConvertToSphere()
 {
 	vector<float> sphereFloats;
 
+	/*
 	for (QuadTree tree : faces)
 	{
-		vector<float> verts = tree.GetVerts(currentLOD, verts);
+	vector<float> verts = tree.GetVerts(currentLOD, verts);
 
-		for (int i = 0; i < verts.size() / 3; i++)
-		{
-			float dx = verts[(i * 3)] * sqrtf(1.0 - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) + (verts[(i * 3) + 1] * verts[(i * 3) + 1] * verts[(i * 3) + 2] * verts[(i * 3) + 2] / 3.0));
-			float dy = verts[(i * 3) + 1] * sqrtf(1.0 - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) - (verts[(i * 3)] * verts[(i * 3)] / 2.0) + (verts[(i * 3) + 2] * verts[(i * 3) + 2] * verts[(i * 3)] * verts[(i * 3)] / 3.0));
-			float dz = verts[(i * 3) + 2] * sqrtf(1.0 - (verts[(i * 3)] * verts[(i * 3)] / 2.0) - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) + (verts[(i * 3)] * verts[(i * 3)] * verts[(i * 3) + 1] * verts[(i * 3) + 1] / 3.0));
-			sphereFloats.push_back(dx);
-			sphereFloats.push_back(dy);
-			sphereFloats.push_back(dz);
-		}
-		
+	for (int i = 0; i < verts.size() / 3; i++)
+	{
+	float dx = verts[(i * 3)] * sqrtf(1.0 - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) + (verts[(i * 3) + 1] * verts[(i * 3) + 1] * verts[(i * 3) + 2] * verts[(i * 3) + 2] / 3.0));
+	float dy = verts[(i * 3) + 1] * sqrtf(1.0 - (verts[(i * 3) + 2] * verts[(i * 3) + 2] / 2.0) - (verts[(i * 3)] * verts[(i * 3)] / 2.0) + (verts[(i * 3) + 2] * verts[(i * 3) + 2] * verts[(i * 3)] * verts[(i * 3)] / 3.0));
+	float dz = verts[(i * 3) + 2] * sqrtf(1.0 - (verts[(i * 3)] * verts[(i * 3)] / 2.0) - (verts[(i * 3) + 1] * verts[(i * 3) + 1] / 2.0) + (verts[(i * 3)] * verts[(i * 3)] * verts[(i * 3) + 1] * verts[(i * 3) + 1] / 3.0));
+	sphereFloats.push_back(dx);
+	sphereFloats.push_back(dy);
+	sphereFloats.push_back(dz);
 	}
 
+	}
+	*/
 	return sphereFloats;
 
 	/*
