@@ -204,8 +204,8 @@ int main(int argc, char* argv[]){
 			glUseProgram(shader_programme);
 			glBindVertexArray(vao);
 			// draw all the array in the array (remember 3 entries in the array make up one point, XYZ, so divide size by 3), from the currently bound VAO with current in-use shader
-			//glDrawArrays(GL_QUADS, 0, verts_array.size() / 3);
-			glDrawElements(GL_QUADS, verts_array.size(), GL_UNSIGNED_INT, (void*)0);
+			glDrawArrays(GL_QUADS, 0, verts_array.size() / 3);
+			//glDrawElements(GL_QUADS, indices_array.size()/3, GL_UNSIGNED_INT, (void*)0);
 			//clear array
 			glBindVertexArray(0);
 			//Update other events like input handling 
@@ -226,6 +226,7 @@ void ChangeLOD()
 	Logger::log(("Changing LOD: New LOD Value is " + to_string(sphere.GetCurrentLOD())), false, true);
 
 	verts_array.clear();
+	/*
 	if (InputHandler::getRenderAsSphere())
 	{
 		Logger::log(("Rendering as Sphere"), false, true);
@@ -237,11 +238,12 @@ void ChangeLOD()
 		Logger::log(("Rendering as Cube"), false, true);
 		//verts_array = sphere.GetFaceVerts();
 	}
-
+	*/
 	UpdateVAO();
 }
 
 void UpdateVAO()
+
 {
 	Logger::log(("VAO Updating "), false, true);
 	//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
@@ -249,7 +251,36 @@ void UpdateVAO()
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+	sphere.IncreaseDetail();
+
 	verts_array = sphere.ReturnFaceVertices();
+	indices_array = sphere.ReturnFaceIndices(1);
+	/*
+	GLuint indicies_vbo = 0;
+	glGenBuffers(1, &indicies_vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicies_vbo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_array.size() * sizeof(unsigned int), &indices_array[0], GL_STATIC_DRAW);
+	*/
+
+	vector<float> test;
+	for (int i = 0; i < indices_array.size(); i++)
+	{
+		test.push_back(verts_array[indices_array[i]]);
+		//test.push_back(verts_array[indices_array[i+1]]);
+		//test.push_back(verts_array[indices_array[i+2]]);
+	}
+
+	vector<glm::vec3> testTwo;
+	for (int i = 0; i < indices_array.size()/3; i++)
+	{
+		testTwo.push_back(glm::vec3(test[i * 3], test[(i * 3) + 1], test[(i * 3) + 2]));
+		//test.push_back(verts_array[indices_array[i+1]]);
+		//test.push_back(verts_array[indices_array[i+2]]);
+	}
+	verts_array = test;
+
+
+	
 	GLuint position_vbo = 0;
 	//Create a vertex buffer object (VBO), which basically moves the verts_array[] to the GPU Memory
 	glGenBuffers(1, &position_vbo);
@@ -266,9 +297,11 @@ void UpdateVAO()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 
+
 	//Create a vertex buffer object (VBO), which basically moves the array[] to the GPU Memory
 	GLuint colour_vbo = 0;
 	glGenBuffers(1, &colour_vbo);
+
 	//Bind VBO, makes it the current buffer in OpenGL's state machine
 	glBindBuffer(GL_ARRAY_BUFFER, colour_vbo);
 	//Tells GL that the GL_ARRAY_BUFFER is the size of the vector * the size of a float, and "gives it the address of the first value"
@@ -283,11 +316,9 @@ void UpdateVAO()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	
-	indices_array = sphere.ReturnFaceIndices(1);
-	GLuint indicies_vbo = 0;
-	glGenBuffers(1, &indicies_vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicies_vbo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_array.size() * sizeof(unsigned int), &indices_array[0], GL_STATIC_DRAW);
+
+
+	Logger::log("test", false, true);
 }
 
 void log_gl_params() {

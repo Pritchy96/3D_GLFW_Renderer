@@ -4,25 +4,22 @@
 #include <vector>
 
 vector<vector<glm::vec3>> Newfaces;
-
-//Default constructor (needed for vector<QuadSphere>)
 QuadSphere::QuadSphere()
 {
 }
 
 void QuadSphere::Initialise(float size)
 {
-	Newfaces.resize(6);
 	//Front
-	Newfaces[0] = vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(size, size, size), glm::vec3(-1, size, size)};
+	Newfaces.push_back(vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(-1, size, size), glm::vec3(size, size, size)});
 	//Back
-	//Newfaces[1] = vector<glm::vec3>{glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, -1)};
-	//Newfaces[2] = vector<glm::vec3>{glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(-1, size, size), glm::vec3(size, size, size)};
-	//Newfaces[3] = vector<glm::vec3>{glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1), glm::vec3(size, -1, size), glm::vec3(-1, -1, size)};
-	//Newfaces[4] = vector<glm::vec3>{glm::vec3(size, -1, -1), glm::vec3(size, size, -1), glm::vec3(size, size, size), glm::vec3(size, -1, size)};
-	//Newfaces[5] = vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(-1, size, size), glm::vec3(-1, size, -1), glm::vec3(-1, -1, -1)};
+	Newfaces.push_back(vector<glm::vec3>{glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1)});
+	Newfaces.push_back(vector<glm::vec3>{glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(size, size, size), glm::vec3(-1, size, size)});
+	Newfaces.push_back(vector<glm::vec3>{glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1), glm::vec3(-1, -1, size), glm::vec3(size, -1, size)});
+	Newfaces.push_back(vector<glm::vec3>{glm::vec3(size, -1, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, size), glm::vec3(size, size, size)});
+	Newfaces.push_back(vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(-1, size, size), glm::vec3(-1, -1, -1), glm::vec3(-1, size, -1)});
 
-	IncreaseDetail();
+	//IncreaseDetail();
 	//IncreaseDetail();
 	//IncreaseDetail();
 	//IncreaseDetail();
@@ -53,8 +50,15 @@ void QuadSphere::IncreaseDetail()
 
 			//Add in existing values to their corresponding slots.
 			tempVec[((y * 2) * newWidth) + (x * 2)] = Newfaces[i][j];
+
+			//Filling in spaces between two values.
+			if (x + 1 == oldWidth)
+			{
+				tempVec[((y * 2) * newWidth) + (x * 2) - 1] = GetMidPoint(tempVec[((y * 2) * newWidth) + ((x * 2))], tempVec[((y * 2) * newWidth) + ((x * 2) - 2)]);
+			}
 		}
 
+		//Filling in entire new rows
 		//Loop through the new array.
 		for (int k = 0; k < tempVec.size() - 1; k++)
 		{
@@ -63,29 +67,14 @@ void QuadSphere::IncreaseDetail()
 				//Add in new vert, taken from vertical points if we can, if not (at edge), from horizontal.
 				int y = (int)k / newWidth;
 				int x = k % newWidth;
-
-				//+1 so it starts from 1.
-				if (y + 1 < newWidth && y > 0 || (tempVec[(y * newWidth) + (x + 1)].x != 0 || tempVec[(y * newWidth) + (x + 1)].y != 0 ||
-					tempVec[(y * newWidth) + (x + 1)].z != 0))
-				{
-					
-					tempVec[k] = GetMidPoint(tempVec[(y * newWidth) + (x + 1)], tempVec[(y * newWidth) + (x - 1)]);
-				}
-				else if (tempVec[(y * newWidth) + (x + 1)].x != 0 || tempVec[(y * newWidth) + (x + 1)].y != 0 ||
-					tempVec[(y * newWidth) + (x + 1)].z != 0)
-				{
-			
-					//We are at the top or bottomof the array, so we can't take points from those sides. 
-					//Get points from left and right instead.
-					tempVec[k] = GetMidPoint(tempVec[(y * newWidth) + (x + 1)], tempVec[(y * newWidth) + (x - 1)]);
-				}
-				else
-				{
-					tempVec[k] = GetMidPoint(tempVec[((y + 1) * newWidth) + (x + 1)], tempVec[((y-1) * newWidth) + (x - 1)]);
-				}
+				//We are at the top or bottomof the array, so we can't take points from those sides. 
+				//Get points from left and right instead.
+				int above = (k + newWidth), below = (k - newWidth);
+				tempVec[k] = GetMidPoint(tempVec[below], tempVec[above]);
 			}
 		}
 		Newfaces[i] = tempVec;
+
 		tempVec.clear();
 	}
 }
@@ -157,14 +146,40 @@ vector<int> QuadSphere::ReturnFaceIndices(int gap)
 			//If points to the right and below the vert exist, we can make a face!
 			if ((y + gap < newWidth) && (x + gap < newWidth))
 			{
+
+				///bottom left, bottom right, top right, tl
+
 				//top left. (Remember, this is the position in the array of verts, not the vert data itself)
-				indices.push_back((y * newWidth) + x + offset);
-				//top right
-				indices.push_back((y * newWidth) + x + gap + offset);
-				//bottom right
-				indices.push_back(((y + gap) * newWidth) + x + offset);
-				//bottom left
-				indices.push_back(((y + gap) * newWidth) + x + gap + offset);
+
+				// (y * width) + x
+				int topLeft = ((y * newWidth) + x + offset) * 3, 
+					topRight = (((y * newWidth) + x + gap + offset) * 3),
+					bottomRight = (((y + gap) * newWidth) + x + gap + offset) * 3, 
+					bottomLeft = (((y + gap) * newWidth) + x + offset) * 3;
+
+
+				//if (indices.size() < 12)
+				{	
+					//top left
+					indices.push_back(topLeft);
+					indices.push_back(topLeft + 1);
+					indices.push_back(topLeft + 2);
+					//top right
+					indices.push_back(topRight);
+					indices.push_back(topRight + 1);
+					indices.push_back(topRight + 2);
+					//bottom right
+					indices.push_back(bottomRight);
+					indices.push_back(bottomRight + 1);
+					indices.push_back(bottomRight + 2);
+					//bottom left
+					indices.push_back(bottomLeft);
+					indices.push_back(bottomLeft + 1);
+					indices.push_back(bottomLeft + 2);
+
+
+
+				}
 			}
 		}
 	}

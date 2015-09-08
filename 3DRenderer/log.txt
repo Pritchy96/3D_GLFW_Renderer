@@ -1,7 +1,17 @@
-Time/Date of Log: Mon Sep 07 00:08:14 2015
+Time/Date of Log: Tue Sep 08 23:25:46 2015
 
 
 Log Start:
 GeForce GTX 950M/PCIe/SSE2
 4.5.0 NVIDIA 353.06
 Generating QuadSphere
+VAO Updating 
+test
+Loading Shaders
+vert_shader.glsl
+vert_shader.glsl
+
+Linking program
+
+
+Entering Update Loop
