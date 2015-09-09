@@ -58,3 +58,8 @@ Added vertical checks for new points in IncreaseDetail. seems to not work.
 
 09/09/15
 The new data structure now almost fully works, barring improvements to IncreaseDetail such that it works for detail > 1.
+Q and E now switch between LODs again.
+
+10/09/15
+New Data Structure now fully works.
+Reimplemented ConvertToSphere().

@@ -7,7 +7,7 @@ class QuadSphere
 public:
 	QuadSphere();
 	void IncreaseDetail();
-	vector<float> ConvertToSphere();
+	vector<float> QuadSphere::ConvertToSphere(vector<float> input);
 	~QuadSphere();
 	void Initialise(float size, int MaxLOD);
 	int GetMaxLOD();

@@ -133,10 +133,11 @@ int main(int argc, char* argv[]){
 #pragma region Create Sphere
 		//GetMaxLOD gives least detailed version of the model, faster loading.
 		Logger::log(("Generating QuadSphere"), false, true);
-		sphere.Initialise(1, 2);
+		sphere.Initialise(1, 20);
 		//Set up initial draw data from sphere.
 		verts_array = sphere.ReturnFaceVertices();
-		indices_array = sphere.ReturnFaceIndices(sphere.GetCurrentLOD());
+		indices_array = sphere.ReturnFaceIndices(1);
+		verts_array = sphere.ConvertToSphere(verts_array);
 #pragma endregion
 
 		// Setting up VAO
@@ -167,17 +168,19 @@ int main(int argc, char* argv[]){
 
 		while (!glfwWindowShouldClose(window))
 		{
-			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
+			if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+			{
 				if (sphere.GetCurrentLOD() < sphere.GetMaxLOD())
 				{
-					sphere.SetCurrentLOD(sphere.GetCurrentLOD() + 1);
+					sphere.SetCurrentLOD(sphere.GetCurrentLOD()*2);
 					ChangeLOD();
 				}
 			}
-			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
+			if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+			{
 				if (sphere.GetCurrentLOD() > 1)
 				{
-					sphere.SetCurrentLOD(sphere.GetCurrentLOD() - 1);
+					sphere.SetCurrentLOD(sphere.GetCurrentLOD()/2);
 					ChangeLOD();
 				}
 			}
@@ -226,29 +229,28 @@ int main(int argc, char* argv[]){
 void ChangeLOD()
 {
 	//if detail level requested doesn't exist, make it.
-	while (sphere.GetCurrentLOD() > sphere.GetHighestMadeLOD())
-	{
-		sphere.IncreaseDetail();
-	}
+	//while (sphere.GetCurrentLOD() > sphere.GetHighestMadeLOD())
+	//{
+	//	sphere.IncreaseDetail();
+	//}
 
 	Logger::log(("Changing LOD: New LOD Value is " + to_string(sphere.GetCurrentLOD())), false, true);
 
-	verts_array.clear();
+	verts_array.clear();	
+
 	verts_array = sphere.ReturnFaceVertices();
 	indices_array = sphere.ReturnFaceIndices(sphere.GetCurrentLOD());
-
+	verts_array = sphere.ConvertToSphere(verts_array);
 	UpdateVAO();
 }
 
 void UpdateVAO()
-
 {
 	Logger::log(("VAO Updating "), false, true);
 	//vertex attribute object (VAO) remembers all of the vertex buffers (VBO's) that you want to use, and the memory layout of each one. 
 	//"bind it, to bring it in to focus in the state machine."
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
-
 
 	GLuint position_vbo = 0;
 	//Create a vertex buffer object (VBO), which basically moves the verts_array[] to the GPU Memory

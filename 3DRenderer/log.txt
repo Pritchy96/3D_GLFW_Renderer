@@ -1,4 +1,4 @@
-Time/Date of Log: Wed Sep 09 05:02:40 2015
+Time/Date of Log: Wed Sep 09 23:09:50 2015
 
 
 Log Start:
@@ -16,7 +16,43 @@ Linking program
 Entering Update Loop
 Changing LOD: New LOD Value is 2
 VAO Updating 
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 32
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 2
+VAO Updating 
 Changing LOD: New LOD Value is 1
+VAO Updating 
+Changing LOD: New LOD Value is 2
+VAO Updating 
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 32
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 4
 VAO Updating 
 Changing LOD: New LOD Value is 2
 VAO Updating 
@@ -36,7 +72,35 @@ Changing LOD: New LOD Value is 1
 VAO Updating 
 Changing LOD: New LOD Value is 2
 VAO Updating 
-Changing LOD: New LOD Value is 1
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 32
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 2
+VAO Updating 
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 32
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 4
 VAO Updating 
 Changing LOD: New LOD Value is 2
 VAO Updating 
@@ -44,7 +108,19 @@ Changing LOD: New LOD Value is 1
 VAO Updating 
 Changing LOD: New LOD Value is 2
 VAO Updating 
-Changing LOD: New LOD Value is 1
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 32
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 4
 VAO Updating 
 Changing LOD: New LOD Value is 2
 VAO Updating 
@@ -52,123 +128,11 @@ Changing LOD: New LOD Value is 1
 VAO Updating 
 Changing LOD: New LOD Value is 2
 VAO Updating 
-Changing LOD: New LOD Value is 1
+Changing LOD: New LOD Value is 4
 VAO Updating 
-Changing LOD: New LOD Value is 2
+Changing LOD: New LOD Value is 8
 VAO Updating 
-Changing LOD: New LOD Value is 1
+Changing LOD: New LOD Value is 16
 VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
+Changing LOD: New LOD Value is 32
 VAO Updating 
