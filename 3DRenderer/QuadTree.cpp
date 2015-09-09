@@ -68,13 +68,15 @@ vector<float> QuadTree::GetVerts(int depthLevel, vector<float> vectors)
 			vectors.push_back(topRight.y);
 			vectors.push_back(topRight.z);
 
+			vectors.push_back(bottomLeft.x);
+			vectors.push_back(bottomLeft.y);
+			vectors.push_back(bottomLeft.z);
+
 			vectors.push_back(bottomRight.x);
 			vectors.push_back(bottomRight.y);
 			vectors.push_back(bottomRight.z);
 
-			vectors.push_back(bottomLeft.x);
-			vectors.push_back(bottomLeft.y);
-			vectors.push_back(bottomLeft.z);
+
 		}
 		else
 		{

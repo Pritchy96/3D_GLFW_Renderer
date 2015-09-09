@@ -8,10 +8,10 @@ QuadSphere::QuadSphere()
 {
 }
 
-void QuadSphere::Initialise(float size)
+void QuadSphere::Initialise(float size, int MaxLOD)
 {
 	//Front
-	Newfaces.push_back(vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(size, -1, size), glm::vec3(-1, size, size), glm::vec3(size, size, size)});
+	Newfaces.push_back(vector<glm::vec3>{glm::vec3(size, -1, size), glm::vec3(size, size, size), glm::vec3(-1, -1, size), glm::vec3(-1, size, size)});
 	//Back
 	Newfaces.push_back(vector<glm::vec3>{glm::vec3(-1, size, -1), glm::vec3(size, size, -1), glm::vec3(-1, -1, -1), glm::vec3(size, -1, -1)});
 	Newfaces.push_back(vector<glm::vec3>{glm::vec3(size, size, -1), glm::vec3(-1, size, -1), glm::vec3(size, size, size), glm::vec3(-1, size, size)});
@@ -19,21 +19,13 @@ void QuadSphere::Initialise(float size)
 	Newfaces.push_back(vector<glm::vec3>{glm::vec3(size, -1, -1), glm::vec3(size, size, -1), glm::vec3(size, -1, size), glm::vec3(size, size, size)});
 	Newfaces.push_back(vector<glm::vec3>{glm::vec3(-1, -1, size), glm::vec3(-1, size, size), glm::vec3(-1, -1, -1), glm::vec3(-1, size, -1)});
 
-	//IncreaseDetail();
-	//IncreaseDetail();
-	//IncreaseDetail();
-	//IncreaseDetail();
-	//IncreaseDetail();
-	//IncreaseDetail();
-	//IncreaseDetail();
+	maxLOD = MaxLOD;
 }
-
 
 void QuadSphere::IncreaseDetail()
 {
 	for (int i = 0; i < Newfaces.size(); i++)
 	{
-
 		//Temp array of new points.
 		vector<glm::vec3> tempVec;
 		//calculate increased newWidth.
@@ -74,7 +66,8 @@ void QuadSphere::IncreaseDetail()
 			}
 		}
 		Newfaces[i] = tempVec;
-
+		//New highest LOD achieved!
+		HighestMadeLOD += 1;
 		tempVec.clear();
 	}
 }
@@ -89,6 +82,11 @@ glm::vec3 QuadSphere::GetMidPoint(glm::vec3 p1, glm::vec3 p2)
 int QuadSphere::GetMaxLOD()
 {
 	return maxLOD;
+}
+
+int QuadSphere::GetHighestMadeLOD()
+{
+	return HighestMadeLOD;
 }
 
 void QuadSphere::SetCurrentLOD(int value)
@@ -146,40 +144,22 @@ vector<int> QuadSphere::ReturnFaceIndices(int gap)
 			//If points to the right and below the vert exist, we can make a face!
 			if ((y + gap < newWidth) && (x + gap < newWidth))
 			{
-
-				///bottom left, bottom right, top right, tl
-
 				//top left. (Remember, this is the position in the array of verts, not the vert data itself)
 
 				// (y * width) + x
-				int topLeft = ((y * newWidth) + x + offset) * 3, 
-					topRight = (((y * newWidth) + x + gap + offset) * 3),
-					bottomRight = (((y + gap) * newWidth) + x + gap + offset) * 3, 
-					bottomLeft = (((y + gap) * newWidth) + x + offset) * 3;
+				int topLeft = ((y * newWidth) + x + offset), 
+					topRight = (((y * newWidth) + x + gap + offset) ),
+					bottomRight = (((y + gap) * newWidth) + x + gap + offset), 
+					bottomLeft = (((y + gap) * newWidth) + x + offset) ;
 
-
-				//if (indices.size() < 12)
-				{	
 					//top left
 					indices.push_back(topLeft);
-					indices.push_back(topLeft + 1);
-					indices.push_back(topLeft + 2);
 					//top right
 					indices.push_back(topRight);
-					indices.push_back(topRight + 1);
-					indices.push_back(topRight + 2);
 					//bottom right
 					indices.push_back(bottomRight);
-					indices.push_back(bottomRight + 1);
-					indices.push_back(bottomRight + 2);
 					//bottom left
 					indices.push_back(bottomLeft);
-					indices.push_back(bottomLeft + 1);
-					indices.push_back(bottomLeft + 2);
-
-
-
-				}
 			}
 		}
 	}

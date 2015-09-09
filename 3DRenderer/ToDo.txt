@@ -11,7 +11,7 @@ Move (most of) ChangeLOD to QuadSphere.
 	A check in 3dRenderer will need to be added to check if the array has been changed
 	If so, replace vbo.
 Alternate Camera Modes.
-Add vertical checks for new points in IncreaseDetail.
+
 
 DONE
 
@@ -53,3 +53,8 @@ Began to implement new data structures: added IncreaseDetail() method.
 Added GetMidPoint to QuadSphere from QuadTree.
 Implemented ReturnFaceIndices() and ReturnFaceVertices().
 
+08/09/15
+Added vertical checks for new points in IncreaseDetail. seems to not work.
+
+09/09/15
+The new data structure now almost fully works, barring improvements to IncreaseDetail such that it works for detail > 1.
