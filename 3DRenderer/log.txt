@@ -1,9 +1,9 @@
-Time/Date of Log: Wed Sep 09 23:09:50 2015
+Time/Date of Log: Wed Sep 16 18:52:20 2015
 
 
 Log Start:
-GeForce GTX 950M/PCIe/SSE2
-4.5.0 NVIDIA 353.06
+Intel(R) HD Graphics 4600
+4.2.0 - Build 10.18.10.4226
 Generating QuadSphere
 VAO Updating 
 Loading Shaders
@@ -14,125 +14,3 @@ Linking program
 
 
 Entering Update Loop
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 32
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 32
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 32
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 32
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 32
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 1
-VAO Updating 
-Changing LOD: New LOD Value is 2
-VAO Updating 
-Changing LOD: New LOD Value is 4
-VAO Updating 
-Changing LOD: New LOD Value is 8
-VAO Updating 
-Changing LOD: New LOD Value is 16
-VAO Updating 
-Changing LOD: New LOD Value is 32
-VAO Updating 

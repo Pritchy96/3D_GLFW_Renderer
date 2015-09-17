@@ -2,8 +2,10 @@
 #include "QuadSphere.h"
 #include "QuadTree.h"
 #include <vector>
+#include "Fractal_Creator.h"
 
 vector<vector<glm::vec3>> verts;
+vector<vector<int>> fractal;
 QuadSphere::QuadSphere()
 {
 }
@@ -24,6 +26,10 @@ void QuadSphere::Initialise(float size, int MaxLOD)
 	{
 		IncreaseDetail();
 	}
+
+	Fractal_Creator test;
+	fractal = test.MakeFractal(500, 500, 20, 100, -100);
+
 }
 
 void QuadSphere::IncreaseDetail()
@@ -108,14 +114,31 @@ int QuadSphere::GetCurrentLOD()
 vector<float> QuadSphere::ReturnFaceVertices()
 {
 	vector<float> floatVerts;
-
+	
 	for (int i = 0; i < verts.size(); i++)
 	{
 		for (int j = 0; j < verts[i].size(); j++)
 		{
-			floatVerts.push_back(verts[i][j].x);
-			floatVerts.push_back(verts[i][j].y);
-			floatVerts.push_back(verts[i][j].z);
+			//Create normalised vector.
+			float x = verts[i][j].x, y = verts[i][j].y, z = verts[i][j].z;
+			float mod = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+			float dx = x / mod;
+			float dy = y / mod;
+			float dz = z / mod;
+
+			int width = sqrt(verts[i].size());
+			int yArrayPos = (int)j / width;
+			int xArrayPos = j % width;
+			float displace = (((float)fractal[xArrayPos+40][yArrayPos+40])-100) / 100;
+
+			//Add noise.
+			//x += (displace * dx);
+			//y += (displace * dy);
+			//z += (displace * dz);
+
+			floatVerts.push_back(x);
+			floatVerts.push_back(y);
+			floatVerts.push_back(z);
 		}
 	}
 	return floatVerts;
