@@ -1,4 +1,4 @@
-Time/Date of Log: Wed Sep 16 18:52:20 2015
+Time/Date of Log: Mon Nov 02 05:29:00 2015
 
 
 Log Start:
@@ -14,3 +14,15 @@ Linking program
 
 
 Entering Update Loop
+Changing LOD: New LOD Value is 2
+VAO Updating 
+Changing LOD: New LOD Value is 1
+VAO Updating 
+Changing LOD: New LOD Value is 2
+VAO Updating 
+Changing LOD: New LOD Value is 4
+VAO Updating 
+Changing LOD: New LOD Value is 8
+VAO Updating 
+Changing LOD: New LOD Value is 16
+VAO Updating 

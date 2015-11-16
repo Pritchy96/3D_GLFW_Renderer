@@ -28,7 +28,7 @@ void QuadSphere::Initialise(float size, int MaxLOD)
 	}
 
 	Fractal_Creator test;
-	fractal = test.MakeFractal(500, 500, 20, 100, -100);
+	fractal = test.MakeFractal(1000, 1000, 10, 100, -100);
 
 }
 
@@ -129,12 +129,13 @@ vector<float> QuadSphere::ReturnFaceVertices()
 			int width = sqrt(verts[i].size());
 			int yArrayPos = (int)j / width;
 			int xArrayPos = j % width;
-			float displace = (((float)fractal[xArrayPos+40][yArrayPos+40])-100) / 100;
+			float displace = (((float)fractal[xArrayPos + 20][(xArrayPos*2) + 20]) - 100) / 100;
 
 			//Add noise.
-			//x += (displace * dx);
-			//y += (displace * dy);
-			//z += (displace * dz);
+			float scale = 2;
+			x += (displace * dx) / scale;
+			y += (displace * dy) / scale;
+			z += (displace * dz) / scale;
 
 			floatVerts.push_back(x);
 			floatVerts.push_back(y);

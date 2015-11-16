@@ -133,7 +133,7 @@ int main(int argc, char* argv[]){
 #pragma region Create Sphere
 		//GetMaxLOD gives least detailed version of the model, faster loading.
 		Logger::log(("Generating QuadSphere"), false, true);
-		sphere.Initialise(1, 20);
+		sphere.Initialise(1, 100);
 		//Set up initial draw data from sphere.
 		verts_array = sphere.ReturnFaceVertices();
 		indices_array = sphere.ReturnFaceIndices(1);
@@ -240,7 +240,12 @@ void ChangeLOD()
 
 	verts_array = sphere.ReturnFaceVertices();
 	indices_array = sphere.ReturnFaceIndices(sphere.GetCurrentLOD());
-	verts_array = sphere.ConvertToSphere(verts_array);
+
+	if (InputHandler::getRenderAsSphere())
+	{
+		verts_array = sphere.ConvertToSphere(verts_array);
+	}
+
 	UpdateVAO();
 }
 

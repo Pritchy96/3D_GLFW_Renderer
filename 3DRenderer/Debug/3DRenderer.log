@@ -1,4 +1,4 @@
-﻿Build started 16/09/2015 18:52:18.
+﻿Build started 02/11/2015 05:28:57.
      1>Project "C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\3DRenderer\3DRenderer.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\\glm /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\3DRenderer.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt QuadSphere.cpp
@@ -13,12 +13,12 @@
      1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(118): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(120): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(129): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(156): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(159): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(210): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(212): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(157): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(160): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(211): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(213): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
      1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(214): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\tom\documents\github\3d_glfw_renderer\3drenderer\quadsphere.cpp(215): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\Debug\3DRenderer.exe" /INCREMENTAL /NOLOGO opengl32.lib glu32.lib glfw3.lib glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\Debug\3DRenderer.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Tom\Documents\GitHub\3D_GLFW_Renderer\Debug\3DRenderer.lib" /MACHINE:X86 Debug\3DRenderer.obj
          Debug\EasyBMP.obj
@@ -36,4 +36,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.40
+Time Elapsed 00:00:01.80
